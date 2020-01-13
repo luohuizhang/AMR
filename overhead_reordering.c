@@ -4,7 +4,7 @@
 #include <time.h>
 #include "zfp.h"
 #include "sz.h"
-#define Level 5 
+#define Level 9
 
 int ** mapping;
 int Part1By1(int x);
@@ -12,12 +12,6 @@ int EncodeMorton2(int x, int y)
 {
 	return (Part1By1(y) << 1) + Part1By1(x);
 }
-
-
-
-
-
-
 
 
 // "Insert" a 0 bit after each of the 16 low bits of x
@@ -30,7 +24,6 @@ int Part1By1(int x)
 	x = (x ^ (x <<  1)) & 0x55555555; // x = -f-e -d-c -b-a -9-8 -7-6 -5-4 -3-2 -1-0
 	return x;
 }
-
 
 
 
@@ -253,6 +246,7 @@ void leveldata_box_zordering_ZFP_compress(struct datapoint **data, int cnt [Leve
 	clock_t start_t, end_t; double total_t;
 
 	start_t = clock();
+	clock_t start_t1=start_t;
 	int i,j,k;
 
 	struct node** trees;
@@ -275,7 +269,6 @@ void leveldata_box_zordering_ZFP_compress(struct datapoint **data, int cnt [Leve
 	end_t = clock();
 	total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
 	printf("Zordering_initial: %lf\n", total_t  );
-	clock_t start_t1=start_t;
 	start_t=clock();
 	for(i=0;i<Level;i++)
 	{ 
@@ -1391,8 +1384,9 @@ int main()
 
 
 
-	FILE *fp=fopen("datapoint_noghost.info","r");
 
+//	FILE *fp=fopen("datapoint_noghost.info","r");
+	FILE *fp=fopen("datapoint_level_overhead.info","r");
 	for(i=0;i<Level;i++)
 	{
 		fread(&cnt[i],sizeof(int),1,fp);
@@ -1414,13 +1408,13 @@ int main()
 		mapping[i]=malloc(cnt[i]*sizeof(int));
 	init_mapping(data,cnt,boxes,box_cnt);
 	leveldata_box_zordering_ZFP_compress(data,cnt,boxes,box_cnt);
-	leveldata_box_zordering_ZFP_decompress(data,cnt,boxes,box_cnt);
-	leveldata_box_zordering_SZ_compress(data,cnt,boxes,box_cnt);
-	leveldata_box_zordering_SZ_decompress(data,cnt,boxes,box_cnt);
+//	leveldata_box_zordering_ZFP_decompress(data,cnt,boxes,box_cnt);
+//	leveldata_box_zordering_SZ_compress(data,cnt,boxes,box_cnt);
+//	leveldata_box_zordering_SZ_decompress(data,cnt,boxes,box_cnt);
 	leveldata_box_zordering_level_ZFP_compress(data,cnt,boxes,box_cnt);
-	leveldata_box_zordering_level_ZFP_decompress(data,cnt,boxes,box_cnt);
-	leveldata_box_zordering_level_SZ_compress(data,cnt,boxes,box_cnt);
-	leveldata_box_zordering_level_SZ_decompress(data,cnt,boxes,box_cnt);
+//	leveldata_box_zordering_level_ZFP_decompress(data,cnt,boxes,box_cnt);
+//	leveldata_box_zordering_level_SZ_compress(data,cnt,boxes,box_cnt);
+//	leveldata_box_zordering_level_SZ_decompress(data,cnt,boxes,box_cnt);
 	//	leveldata_box_zordering_level(data,cnt,boxes,box_cnt);
 	for(i=0;i<Level;i++)	
 		free(data[i]);
