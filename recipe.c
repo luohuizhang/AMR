@@ -68,6 +68,7 @@ struct node{
 	int lvl;
 	struct node *fchild;
 	struct node *next;
+        int offset;
 };
 
 
@@ -349,6 +350,7 @@ struct node_storage* leveldata_box_level(struct datapoint **data, int cnt [Level
 				trees[i][offset+k].fchild=NULL;
 				trees[i][offset+k].next=NULL;
 				trees[i][offset+k].lvl=i;
+                                trees[i][offset+k].offset=offset+amt_index[k];
 			}
 
 			offset+=box_size;

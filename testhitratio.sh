@@ -12,7 +12,7 @@ echo $err
 rm result.txt
 
 set -- $List
-err_sz=$( echo "0.1*$err " |bc )
+#err_sz=$( echo "0.1*$err " |bc )
 sed -i "66s/.*/absErrBound =$err/" /home/luo/ZFP/SZ/sz.config
 for i
 do
@@ -26,9 +26,11 @@ echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
         size='0'
 size=$(( $size+ $(stat -c%s $i)/8 ))
         echo $size 
-        /home/luo/ZFP/SZ/bin/testdouble_compress /home/luo/ZFP/SZ/sz.config  $i $size
-        echo $(stat -c%s $i)/$(stat -c%s $i.sz) |bc -l 
-
+        #/home/luo/ZFP/SZ/bin/testdouble_compress /home/luo/ZFP/SZ/sz.config  $i $size
+        #echo $(stat -c%s $i)/$(stat -c%s $i.sz) |bc -l 
+         rm  ZFPresult.txt
+         /home/luo/ZFP/zfp/bin/zfp -a $err -s -d -1 $size -i $i -z $i.zfp
+         python ../PineIslandGlacier/averageZFP.py ZFPresult.txt
         done
 
 

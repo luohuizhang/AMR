@@ -602,12 +602,13 @@ int main()
 	//	struct box *inq=malloc(sizeof(struct box));
 
 	struct box *inq;
-	for(i=0;i<box_cnt[2];i++){
-		inq=&boxes[2][i];
-		inq->x1=inq->x1>>2;
-		inq->y1=inq->y1>>2;
-		inq->x2=inq->x2>>2;
-		inq->y2=inq->y2>>2;
+        for(i=0;i<Level;i++)
+	for(j=0;j<box_cnt[i];j++){
+		inq=&boxes[i][j];
+		inq->x1=inq->x1>>i;
+		inq->y1=inq->y1>>i;
+		inq->x2=inq->x2>>i;
+		inq->y2=inq->y2>>i;
 
 		pattern_box(s_data,cnt,inq);
 		flag_block_c(s_data,cnt);
@@ -618,7 +619,7 @@ int main()
 		flag_block_init(s_data1,cnt);
 		printf("\n");
 	}
-	printf("row:\n");
+	/*printf("row:\n");
 	inq=malloc(sizeof(struct box));
 	inq->x1=0;
 	inq->x2=127;
@@ -702,7 +703,7 @@ int main()
 		printf("\n");
 	}
 
-
+*/
 
 	free(s_data);
 	free(s_data1);
