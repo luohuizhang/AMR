@@ -5,7 +5,7 @@ import sys
 import array
 import os
 
-filename="Level_0.dat"
+filename=sys.argv[1]
 statinfo=os.stat(filename)
 fsize=statinfo.st_size
 #print fsize/8

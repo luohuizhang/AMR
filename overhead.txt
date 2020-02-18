@@ -1,0 +1,157 @@
+gcc -O3 -c overhead_reordering.c -I /home/luo/ZFP/zfp/include -I/home/luo/ZFP/SZ/include
+gcc -O3 -lm -o overhead_reordering overhead_reordering.o -L /home/luo/ZFP/zfp/lib/ -lzfp -L /home/luo/ZFP/SZ/lib -lSZ  -lzstd -lzlib -lm -lgsl -lgslcblas 
+PineIslandGlacier
+data count= 27744
+box_cnt= 24
+data count= 15868
+box_cnt= 27
+data count= 32032
+box_cnt= 52
+data count= 64256
+box_cnt= 136
+data count= 128440
+box_cnt= 326
+Baseline_Zordering: 0.003659
+Baseline_compress: 0.008607
+Basline ZFP compress: 0.012346
+Baseline_decompress: 0.007407
+Baseline_Zordering: 0.007120
+Baseline ZFP decompress: 0.014534
+Baseline_Zordering: 0.003591
+Baseline_compress: 0.007732
+Baseline SZ compress: 0.011555
+Baseline_decompress: 0.005063
+Baseline_Zordering: 0.002819
+Baseline SZ decompress: 0.007888
+LevelRe_init: 0.003878
+LevelRe_Zordering: 0.008944
+LevelRe_build: 0.002297
+LevelRe_traverse: 0.004160
+LevelRe_compress: 0.012037
+LevelRe ZFP compress: 0.027167
+LevelRe_init: 0.002908
+LevelRe_Zordering: 0.008943
+LevelRe_build: 0.002020
+LevelRe_decompress: 0.007708
+LevelRe_traverse: 0.003122
+LevelRe ZFP decompress: 0.024717
+LevelRe_init: 0.003533
+LevelRe_Zordering: 0.009169
+LevelRe_build: 0.002211
+LevelRe_traverse: 0.003795
+LevelRe_compress: 0.006416
+LevelRe SZ compress: 0.025667
+LevelRe_init: 0.003422
+LevelRe_Zordering: 0.009123
+LevelRe_build: 0.002054
+LevelRe_decompress: 0.003764
+LevelRe_traverse: 0.002590
+LevelRe SZ decompress: 0.020970
+gcc -O3 -c overhead_reordering.c -I /home/luo/ZFP/zfp/include -I/home/luo/ZFP/SZ/include
+gcc -O3 -lm -o overhead_reordering overhead_reordering.o -L /home/luo/ZFP/zfp/lib/ -lzfp -L /home/luo/ZFP/SZ/lib -lSZ  -lzstd -lzlib -lm -lgsl -lgslcblas 
+MISMIP3D
+data count= 2448
+box_cnt= 4
+data count= 2312
+box_cnt= 2
+data count= 4080
+box_cnt= 4
+data count= 5984
+box_cnt= 8
+data count= 10436
+box_cnt= 13
+data count= 19716
+box_cnt= 41
+data count= 38136
+box_cnt= 70
+data count= 72940
+box_cnt= 143
+data count= 144220
+box_cnt= 311
+Baseline_Zordering: 0.004232
+Baseline_compress: 0.009612
+Basline ZFP compress: 0.013934
+Baseline_decompress: 0.008294
+Baseline_Zordering: 0.003757
+Baseline ZFP decompress: 0.012055
+Baseline_Zordering: 0.003952
+Baseline_compress: 0.007360
+Baseline SZ compress: 0.011589
+Baseline_decompress: 0.003901
+Baseline_Zordering: 0.003285
+Baseline SZ decompress: 0.007191
+LevelRe_init: 0.004457
+LevelRe_Zordering: 0.010020
+LevelRe_build: 0.002581
+LevelRe_traverse: 0.004595
+LevelRe_compress: 0.013974
+LevelRe ZFP compress: 0.031044
+LevelRe_init: 0.003510
+LevelRe_Zordering: 0.009858
+LevelRe_build: 0.002488
+LevelRe_decompress: 0.008358
+LevelRe_traverse: 0.003609
+LevelRe ZFP decompress: 0.027840
+LevelRe_init: 0.004051
+LevelRe_Zordering: 0.010396
+LevelRe_build: 0.002473
+LevelRe_traverse: 0.004359
+LevelRe_compress: 0.006577
+LevelRe SZ compress: 0.028484
+LevelRe_init: 0.003963
+LevelRe_Zordering: 0.010022
+LevelRe_build: 0.002654
+LevelRe_decompress: 0.003248
+LevelRe_traverse: 0.002987
+LevelRe SZ decompress: 0.022893
+gcc -O3 -c overhead_reordering.c -I /home/luo/ZFP/zfp/include -I/home/luo/ZFP/SZ/include
+gcc -O3 -lm -o overhead_reordering overhead_reordering.o -L /home/luo/ZFP/zfp/lib/ -lzfp -L /home/luo/ZFP/SZ/lib -lSZ  -lzstd -lzlib -lm -lgsl -lgslcblas 
+Greenland
+data count= 11700
+box_cnt= 15
+data count= 41628
+box_cnt= 95
+data count= 128140
+box_cnt= 199
+data count= 398096
+box_cnt= 740
+data count= 1127972
+box_cnt= 1953
+data count= 2935300
+box_cnt= 5281
+Baseline_Zordering: 0.064323
+Baseline_compress: 0.112274
+Basline ZFP compress: 0.177769
+Baseline_decompress: 0.090952
+Baseline_Zordering: 0.060732
+Baseline ZFP decompress: 0.151693
+Baseline_Zordering: 0.056899
+Baseline_compress: 0.116538
+Baseline SZ compress: 0.174595
+Baseline_decompress: 0.068866
+Baseline_Zordering: 0.053528
+Baseline SZ decompress: 0.122403
+LevelRe_init: 0.104000
+LevelRe_Zordering: 0.129719
+LevelRe_build: 0.048862
+LevelRe_traverse: 0.082353
+LevelRe_compress: 0.183943
+LevelRe ZFP compress: 0.467709
+LevelRe_init: 0.096315
+LevelRe_Zordering: 0.126821
+LevelRe_build: 0.049160
+LevelRe_decompress: 0.098672
+LevelRe_traverse: 0.058950
+LevelRe ZFP decompress: 0.429940
+LevelRe_init: 0.094785
+LevelRe_Zordering: 0.123223
+LevelRe_build: 0.049217
+LevelRe_traverse: 0.079935
+LevelRe_compress: 0.103867
+LevelRe SZ compress: 0.452195
+LevelRe_init: 0.093752
+LevelRe_Zordering: 0.126534
+LevelRe_build: 0.049330
+LevelRe_decompress: 0.059044
+LevelRe_traverse: 0.059892
+LevelRe SZ decompress: 0.388574

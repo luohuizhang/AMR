@@ -4,7 +4,7 @@
 #include <time.h>
 #include "zfp.h"
 #include "sz.h"
-#define Level 5
+#define Level 6
 #define Refine_ratio 2
 #define SIZE_MAX1  2147483647
 #define Error_bound 5
@@ -20,8 +20,8 @@ int ** mapping;
 
 struct parent_box{
 	int num;
-	int p_list[20];
-	int offset[20];
+	int p_list[10];
+	int offset[10];
 };
 struct parent_box **box_mapping;
 int Part1By1(int x);
@@ -81,9 +81,9 @@ struct box{
 };
 
 struct node{
-	int x,y;
+	//int x,y;
 	double val;
-	int flag;
+	//	int flag;
 	struct node *fchild;
 	struct node *next;
 	int index;
@@ -91,7 +91,7 @@ struct node{
 
 
 struct node_b{
-	int x,y;
+	//	int x,y;
 	double val;
 };
 
@@ -110,7 +110,7 @@ void PrintTree(struct node* p,  int flag)
 
 	}
 	fp_glob++;
-	p->flag=1;
+	//p->flag=1;
 	//  printf("%d\n",p->flag);
 	if (p->fchild!=NULL) 
 	{ PrintTree(p->fchild,flag); }
@@ -398,11 +398,11 @@ void mapping_by_box(struct datapoint **data, int cnt [Level],struct box **boxes,
 
 
 	/*for(i=Level-1;i>0;i--)
-		for(j=0;j<cnt[i];j++)
-		{
-			if(data[i][j].a/Refine_ratio!=data[i-1][mapping[i][j]].a||data[i][j].b/Refine_ratio!=data[i-1][mapping[i][j]].b) 
-				printf("Error! %d,%d: %d, %d\n",data[i][j].a,data[i-1][mapping[i][j]].a,data[i][j].b,data[i-1][mapping[i][j]].b);
-		}*/
+	  for(j=0;j<cnt[i];j++)
+	  {
+	  if(data[i][j].a/Refine_ratio!=data[i-1][mapping[i][j]].a||data[i][j].b/Refine_ratio!=data[i-1][mapping[i][j]].b) 
+	  printf("Error! %d,%d: %d, %d\n",data[i][j].a,data[i-1][mapping[i][j]].a,data[i][j].b,data[i-1][mapping[i][j]].b);
+	  }*/
 
 }
 	int
@@ -534,8 +534,8 @@ void leveldata_box_zordering_ZFP_compress(struct datapoint **data, int cnt [Leve
 		offset=0;
 		for(j=0;j<box_cnt[i];j++)
 		{
-			int a=boxes[i][j].x2-boxes[i][j].x1;
-			int b=boxes[i][j].y2-boxes[i][j].y1;
+			int a=boxes[i][j].y2-boxes[i][j].y1;
+			int b=boxes[i][j].x2-boxes[i][j].x1;
 			int z_size= EncodeMorton2(a,b)+1;
 			int *z_index=malloc(z_size*sizeof(int));
 			//memset (z_index,-1,z_size*sizeof(int));
@@ -563,8 +563,8 @@ void leveldata_box_zordering_ZFP_compress(struct datapoint **data, int cnt [Leve
 			}
 			for(k=0;k<box_size;k++)
 			{
-				trees[i][offset+k].x=data[i][offset+recipe_en[k]].a;
-				trees[i][offset+k].y=data[i][offset+recipe_en[k]].b;
+				//trees[i][offset+k].x=data[i][offset+recipe_en[k]].a;
+				//trees[i][offset+k].y=data[i][offset+recipe_en[k]].b;
 				trees[i][offset+k].val=data[i][offset+recipe_en[k]].val;
 			}
 
@@ -643,8 +643,8 @@ void leveldata_box_zordering_ZFP_decompress(struct datapoint **data, int cnt [Le
 		offset=0;
 		for(j=0;j<box_cnt[i];j++)
 		{
-			int a=boxes[i][j].x2-boxes[i][j].x1;
-			int b=boxes[i][j].y2-boxes[i][j].y1;
+			int a=boxes[i][j].y2-boxes[i][j].y1;
+			int b=boxes[i][j].x2-boxes[i][j].x1;
 			int z_size= EncodeMorton2(a,b)+1;
 			int *z_index=malloc(z_size*sizeof(int));
 			//memset (z_index,-1,z_size*sizeof(int));
@@ -672,8 +672,8 @@ void leveldata_box_zordering_ZFP_decompress(struct datapoint **data, int cnt [Le
 			}
 			for(k=0;k<box_size;k++)
 			{
-				trees[i][offset+k].x=data[i][offset+recipe_en[k]].a;
-				trees[i][offset+k].y=data[i][offset+recipe_en[k]].b;
+				//trees[i][offset+k].x=data[i][offset+recipe_en[k]].a;
+				//trees[i][offset+k].y=data[i][offset+recipe_en[k]].b;
 				trees[i][offset+k].val=data[i][offset+recipe_en[k]].val;
 			}
 
@@ -736,8 +736,8 @@ void leveldata_box_zordering_SZ_compress(struct datapoint **data, int cnt [Level
 		offset=0;
 		for(j=0;j<box_cnt[i];j++)
 		{
-			int a=boxes[i][j].x2-boxes[i][j].x1;
-			int b=boxes[i][j].y2-boxes[i][j].y1;
+			int a=boxes[i][j].y2-boxes[i][j].y1;
+			int b=boxes[i][j].x2-boxes[i][j].x1;
 			int z_size= EncodeMorton2(a,b)+1;
 			//printf("%d,%d,%d\n",a,b,z_size);
 			int *z_index=malloc(z_size*sizeof(int));
@@ -766,8 +766,8 @@ void leveldata_box_zordering_SZ_compress(struct datapoint **data, int cnt [Level
 			}
 			for(k=0;k<box_size;k++)
 			{
-				trees[i][offset+k].x=data[i][offset+recipe_en[k]].a;
-				trees[i][offset+k].y=data[i][offset+recipe_en[k]].b;
+				//trees[i][offset+k].x=data[i][offset+recipe_en[k]].a;
+				//trees[i][offset+k].y=data[i][offset+recipe_en[k]].b;
 				trees[i][offset+k].val=data[i][offset+recipe_en[k]].val;
 			}
 
@@ -796,7 +796,7 @@ void leveldata_box_zordering_SZ_compress(struct datapoint **data, int cnt [Level
 	printf("Baseline_Zordering: %lf\n", total_t  );
 	start_t=clock();
 
-//	confparams_cpr->absErrBound = Error_bound;
+	//	confparams_cpr->absErrBound = Error_bound;
 	char *confFile = "/home/luo/ZFP/SZ/sz.config";
 	size_t outSize;
 	int r4 = 0, r3 = 0, r2 = 0, r5 = 0;
@@ -834,7 +834,7 @@ void leveldata_box_zordering_SZ_decompress(struct datapoint **data, int cnt [Lev
 	size_t outSize=SIZE_MAX1;
 	int r4 = 0, r3 = 0, r2 = 0, r5 = 0;
 	SZ_Init(confFile);
-//confparams_cpr->absErrBound = Error_bound;
+	//confparams_cpr->absErrBound = Error_bound;
 	int datasize=0;
 	for(i=0;i<Level;i++)
 		datasize=datasize+cnt[i];
@@ -870,8 +870,8 @@ void leveldata_box_zordering_SZ_decompress(struct datapoint **data, int cnt [Lev
 		offset=0;
 		for(j=0;j<box_cnt[i];j++)
 		{
-			int a=boxes[i][j].x2-boxes[i][j].x1;
-			int b=boxes[i][j].y2-boxes[i][j].y1;
+			int a=boxes[i][j].y2-boxes[i][j].y1;
+			int b=boxes[i][j].x2-boxes[i][j].x1;
 			int z_size= EncodeMorton2(a,b)+1;
 			//printf("%d,%d,%d\n",a,b,z_size);
 			int *z_index=malloc(z_size*sizeof(int));
@@ -900,8 +900,8 @@ void leveldata_box_zordering_SZ_decompress(struct datapoint **data, int cnt [Lev
 			}
 			for(k=0;k<box_size;k++)
 			{
-				trees[i][offset+k].x=data[i][offset+recipe_en[k]].a;
-				trees[i][offset+k].y=data[i][offset+recipe_en[k]].b;
+				//trees[i][offset+k].x=data[i][offset+recipe_en[k]].a;
+				//trees[i][offset+k].y=data[i][offset+recipe_en[k]].b;
 				trees[i][offset+k].val=data[i][offset+recipe_en[k]].val;
 			}
 
@@ -964,13 +964,6 @@ void leveldata_box_zordering_level_ZFP_compress(struct datapoint **data, int cnt
 	mapping_by_box(data,cnt,boxes,box_cnt);
 	int offset=0;
 
-	for(i=0;i<Level;i++)
-		for(j=0;j<cnt[i];j++)
-		{
-
-			trees[i][j].flag=0;
-
-		}
 
 	end_t = clock();
 	total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
@@ -987,8 +980,8 @@ void leveldata_box_zordering_level_ZFP_compress(struct datapoint **data, int cnt
 			recipe_de=malloc(cnt[i]*sizeof(int));
 		for(j=0;j<box_cnt[i];j++)
 		{
-			int a=boxes[i][j].x2-boxes[i][j].x1;
-			int b=boxes[i][j].y2-boxes[i][j].y1;
+			int a=boxes[i][j].y2-boxes[i][j].y1;
+			int b=boxes[i][j].x2-boxes[i][j].x1;
 			int z_size= EncodeMorton2(a,b)+1;
 			//printf("%d,%d,%d\n",a,b,z_size);
 			int *z_index=malloc(z_size*sizeof(int));
@@ -1017,13 +1010,13 @@ void leveldata_box_zordering_level_ZFP_compress(struct datapoint **data, int cnt
 			}
 			for(k=0;k<box_size;k++)
 			{
-				trees[i][offset+k].x=data[i][offset+recipe_en[k]].a;
-				trees[i][offset+k].y=data[i][offset+recipe_en[k]].b;
+				//trees[i][offset+k].x=data[i][offset+recipe_en[k]].a;
+				//trees[i][offset+k].y=data[i][offset+recipe_en[k]].b;
 				trees[i][offset+k].val=data[i][offset+recipe_en[k]].val;
 				trees[i][offset+k].index=offset+recipe_en[k];
 				//	trees[i][offset+k].y=data[i][offset+k].b;
 				//	trees[i][offset+k].val=data[i][offset+k].val;
-				trees[i][offset+k].flag=0;
+				//trees[i][offset+k].flag=0;
 				trees[i][offset+k].fchild=NULL;
 				trees[i][offset+k].next=NULL;
 			}
@@ -1108,13 +1101,13 @@ void leveldata_box_zordering_level_ZFP_compress(struct datapoint **data, int cnt
 		}
 
 
-	for(i=0;i<Level;i++)
-		for(j=0;j<cnt[i];j++)
-		{
-			if(trees[i][j].flag==0)                      
-				printf("Not visit %d,%d\n",i,j);
+	/*for(i=0;i<Level;i++)
+	  for(j=0;j<cnt[i];j++)
+	  {
+	  if(trees[i][j].flag==0)                      
+	  printf("Not visit %d,%d\n",i,j);
 
-		}
+	  }*/
 	for(i=0;i<Level;i++)
 		free(trees[i]);
 	free(trees);
@@ -1157,14 +1150,6 @@ void leveldata_box_zordering_level_ZFP_decompress(struct datapoint **data, int c
 	mapping_by_box(data,cnt,boxes,box_cnt);
 	int offset=0;
 
-	for(i=0;i<Level;i++)
-		for(j=0;j<cnt[i];j++)
-		{
-
-			trees[i][j].flag=0;
-
-		}
-
 	end_t = clock();
 	total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
 	printf("LevelRe_init: %lf\n", total_t  );
@@ -1180,8 +1165,8 @@ void leveldata_box_zordering_level_ZFP_decompress(struct datapoint **data, int c
 			recipe_de=malloc(cnt[i]*sizeof(int));
 		for(j=0;j<box_cnt[i];j++)
 		{
-			int a=boxes[i][j].x2-boxes[i][j].x1;
-			int b=boxes[i][j].y2-boxes[i][j].y1;
+			int a=boxes[i][j].y2-boxes[i][j].y1;
+			int b=boxes[i][j].x2-boxes[i][j].x1;
 			int z_size= EncodeMorton2(a,b)+1;
 			//printf("%d,%d,%d\n",a,b,z_size);
 			int *z_index=malloc(z_size*sizeof(int));
@@ -1210,11 +1195,11 @@ void leveldata_box_zordering_level_ZFP_decompress(struct datapoint **data, int c
 			}
 			for(k=0;k<box_size;k++)
 			{
-				trees[i][offset+k].x=data[i][offset+recipe_en[k]].a;
-				trees[i][offset+k].y=data[i][offset+recipe_en[k]].b;
+				//trees[i][offset+k].x=data[i][offset+recipe_en[k]].a;
+				//trees[i][offset+k].y=data[i][offset+recipe_en[k]].b;
 				trees[i][offset+k].val=data[i][offset+recipe_en[k]].val;
 				trees[i][offset+k].index=offset+recipe_en[k];
-				trees[i][offset+k].flag=0;
+				//trees[i][offset+k].flag=0;
 				trees[i][offset+k].fchild=NULL;
 				trees[i][offset+k].next=NULL;
 			}
@@ -1349,13 +1334,6 @@ void leveldata_box_zordering_level_SZ_compress(struct datapoint **data, int cnt 
 	mapping_by_box(data,cnt,boxes,box_cnt);
 	int offset=0;
 
-	for(i=0;i<Level;i++)
-		for(j=0;j<cnt[i];j++)
-		{
-
-			trees[i][j].flag=0;
-
-		}
 
 	end_t = clock();
 	total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
@@ -1372,8 +1350,8 @@ void leveldata_box_zordering_level_SZ_compress(struct datapoint **data, int cnt 
 			recipe_de=malloc(cnt[i]*sizeof(int));
 		for(j=0;j<box_cnt[i];j++)
 		{
-			int a=boxes[i][j].x2-boxes[i][j].x1;
-			int b=boxes[i][j].y2-boxes[i][j].y1;
+			int a=boxes[i][j].y2-boxes[i][j].y1;
+			int b=boxes[i][j].x2-boxes[i][j].x1;
 			int z_size= EncodeMorton2(a,b)+1;
 			//printf("%d,%d,%d\n",a,b,z_size);
 			int *z_index=malloc(z_size*sizeof(int));
@@ -1402,11 +1380,11 @@ void leveldata_box_zordering_level_SZ_compress(struct datapoint **data, int cnt 
 			}
 			for(k=0;k<box_size;k++)
 			{
-				trees[i][offset+k].x=data[i][offset+recipe_en[k]].a;
-				trees[i][offset+k].y=data[i][offset+recipe_en[k]].b;
+				//	trees[i][offset+k].x=data[i][offset+recipe_en[k]].a;
+				//	trees[i][offset+k].y=data[i][offset+recipe_en[k]].b;
 				trees[i][offset+k].val=data[i][offset+recipe_en[k]].val;
 				trees[i][offset+k].index=offset+recipe_en[k];
-				trees[i][offset+k].flag=0;
+				//	trees[i][offset+k].flag=0;
 				trees[i][offset+k].fchild=NULL;
 				trees[i][offset+k].next=NULL;
 			}
@@ -1490,13 +1468,6 @@ void leveldata_box_zordering_level_SZ_compress(struct datapoint **data, int cnt 
 
 
 	for(i=0;i<Level;i++)
-		for(j=0;j<cnt[i];j++)
-		{
-			if(trees[i][j].flag==0)                      
-				printf("Not visit %d,%d\n",i,j);
-
-		}
-	for(i=0;i<Level;i++)
 		free(trees[i]);
 	free(trees);
 	end_t = clock();
@@ -1553,14 +1524,6 @@ void leveldata_box_zordering_level_SZ_decompress(struct datapoint **data, int cn
 	mapping_by_box(data,cnt,boxes,box_cnt);
 	int offset=0;
 
-	for(i=0;i<Level;i++)
-		for(j=0;j<cnt[i];j++)
-		{
-
-			trees[i][j].flag=0;
-
-		}
-
 	end_t = clock();
 	total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
 	printf("LevelRe_init: %lf\n", total_t  );
@@ -1576,8 +1539,8 @@ void leveldata_box_zordering_level_SZ_decompress(struct datapoint **data, int cn
 			recipe_de=malloc(cnt[i]*sizeof(int));
 		for(j=0;j<box_cnt[i];j++)
 		{
-			int a=boxes[i][j].x2-boxes[i][j].x1;
-			int b=boxes[i][j].y2-boxes[i][j].y1;
+			int a=boxes[i][j].y2-boxes[i][j].y1;
+			int b=boxes[i][j].x2-boxes[i][j].x1;
 			int z_size= EncodeMorton2(a,b)+1;
 			//printf("%d,%d,%d\n",a,b,z_size);
 			int *z_index=malloc(z_size*sizeof(int));
@@ -1606,13 +1569,13 @@ void leveldata_box_zordering_level_SZ_decompress(struct datapoint **data, int cn
 			}
 			for(k=0;k<box_size;k++)
 			{
-				trees[i][offset+k].x=data[i][offset+recipe_en[k]].a;
-				trees[i][offset+k].y=data[i][offset+recipe_en[k]].b;
+				//trees[i][offset+k].x=data[i][offset+recipe_en[k]].a;
+				//trees[i][offset+k].y=data[i][offset+recipe_en[k]].b;
 				trees[i][offset+k].val=data[i][offset+recipe_en[k]].val;
 				trees[i][offset+k].index=offset+recipe_en[k];
 				//	trees[i][offset+k].y=data[i][offset+k].b;
 				//	trees[i][offset+k].val=data[i][offset+k].val;
-				trees[i][offset+k].flag=0;
+				//trees[i][offset+k].flag=0;
 				trees[i][offset+k].fchild=NULL;
 				trees[i][offset+k].next=NULL;
 			}
@@ -1742,8 +1705,12 @@ void leveldata_box_zordering_level_SZ_decompress(struct datapoint **data, int cn
 
 
 
-int main()
+int main(int argc, char **argv)
 {
+	if(argc<2){
+		printf("Usage:%s inputfile\n",argv[0]);
+		return 0;
+	}
 	int i,j,cnt[Level],box_cnt[Level],read_cnt;
 	struct datapoint** data;
 	data=malloc(Level*sizeof(* data)); 
@@ -1752,20 +1719,26 @@ int main()
 
 
 
-	FILE *fp=fopen("datapoint.info","r");
-	//	FILE *fp=fopen("datapoint_noghost.info","r");
 
 	//	FILE *fp=fopen("datapoint_level_overhead.info","r");
+	FILE *fp=fopen(argv[1],"r");
+	if (fp==NULL)
+		printf("Can not open file %s!",argv[1]);
+
+
+
+	//	FILE *fp=fopen("datapoint_noghost.info","r");
+
 	for(i=0;i<Level;i++)
 	{
-	read_cnt=fread(&cnt[i],sizeof(int),1,fp);
+		read_cnt=fread(&cnt[i],sizeof(int),1,fp);
 		printf("data count= %d\n", cnt[i]);
-		 read_cnt=fread(&box_cnt[i],sizeof(int),1,fp);
+		read_cnt=fread(&box_cnt[i],sizeof(int),1,fp);
 		printf("box_cnt= %d\n", box_cnt[i]);
 		boxes[i]=malloc(box_cnt[i]*sizeof(struct box));
-		 read_cnt=fread(boxes[i],sizeof(struct box),box_cnt[i],fp);
+		read_cnt=fread(boxes[i],sizeof(struct box),box_cnt[i],fp);
 		data[i]=malloc(cnt[i]*sizeof(struct datapoint));
-		 read_cnt=fread(data[i],sizeof(struct datapoint),cnt[i],fp);
+		read_cnt=fread(data[i],sizeof(struct datapoint),cnt[i],fp);
 		//for(j=0;j<cnt[i];j++)
 		//	printf("%d %d %lf\n", data[i][j].a,data[i][j].b,data[i][j].val);
 	}

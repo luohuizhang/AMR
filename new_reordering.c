@@ -1157,12 +1157,12 @@ int main()
 
 		//       leveldata_row(data,cnt,boxes,box_cnt);
 		//	leveldata_row_level(data,cnt,boxes,box_cnt);
-		leveldata_box(data,cnt,boxes,box_cnt,col);
-		leveldata_box_level(data,cnt,boxes,box_cnt,col);
+		//leveldata_box(data,cnt,boxes,box_cnt,col);
+		//leveldata_box_level(data,cnt,boxes,box_cnt,col);
 		//	leveldata_row_zordering(data,cnt,boxes,box_cnt);
 		//	leveldata_row_zordering_level(data,cnt,boxes,box_cnt);
 		leveldata_box_zordering(data,cnt,boxes,box_cnt,col);
-		leveldata_box_zordering_level(data,cnt,boxes,box_cnt,col);
+		//leveldata_box_zordering_level(data,cnt,boxes,box_cnt,col);
 		for(i=0;i<Level;i++)	
 			free(data[i]);
 		for(i=0;i<Level;i++)
