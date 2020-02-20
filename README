@@ -1,0 +1,6 @@
+Instruction for LevelRE:
+
+1.Get the applications at http://davis.lbl.gov/Manuals/BISICLES-DOCS/index.html.
+2.Copy the files in filetoo/ to the directory of BISICLES/code/filetool/, and compile.
+3.Set the ZFP and SZ compressors and set the Makefile in repostitory/.
+4.Follow the scripts in repostitory/. 
