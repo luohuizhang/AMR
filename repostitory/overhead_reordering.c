@@ -847,12 +847,12 @@ void leveldata_box_zordering_SZ_compress(struct datapoint **data, int cnt [Level
 	printf("Baseline_Zordering: %lf\n", total_t  );
 	start_t=clock();
 
-	//	confparams_cpr->absErrBound = Error_bound;
 	char *confFile = "/home/luo/ZFP/SZ/sz.config";
 	size_t outSize;
 	int r4 = 0, r3 = 0, r2 = 0, r5 = 0;
 	SZ_Init(confFile);
-
+        printf("absErrBound: %lf\n",confparams_cpr->absErrBound);
+	confparams_cpr->absErrBound = Error_bound;
 	unsigned char *compressed = SZ_compress(SZ_DOUBLE, dataArray, &outSize, r5, r4, r3, r2 ,datasize);
 
 	FILE *fp=fopen("sz_baseline.b","w");

@@ -688,7 +688,7 @@ int main()
 
 
 	FILE *fp=fopen("datapoint_0","r");
-	//		FILE *fp=fopen("datapoint_noghost.info","r");
+//		FILE *fp=fopen("datapoint_noghost.info","r");
 	for(i=0;i<Level;i++)
 	{
 		fread(&cnt[i],sizeof(int),1,fp);
@@ -719,11 +719,11 @@ int main()
 	s_data1=leveldata_box_level(data,cnt,boxes,box_cnt);
 
 
-	struct box inq;
+		struct box inq;
 
 	double num_run1=0;
 	double num_run2=0;
-	//for(i=0;i<Level;i++)
+//for(i=0;i<Level;i++)
 	for(i=0;i<1;i++)
 		for(j=0;j<box_cnt[i];j++){
 			inq=boxes[i][j];
@@ -757,9 +757,9 @@ int main()
 	for(i=0;i<Level;i++)
 		free(mapping[i]);
 	free(mapping);
-	for(i=0;i<Level;i++)
-		free(box_mapping[i]);
-	free(box_mapping);
+        for(i=0;i<Level;i++)
+                free(box_mapping[i]);
+        free(box_mapping);
 
 	return 1;
 }
