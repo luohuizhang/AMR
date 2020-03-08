@@ -4,97 +4,37 @@
 #include <time.h>
 #define Refine_ratio 2
 
-#define Level 5
+#define Level 6
 
 #include <gsl/gsl_sort_int.h>
 
+void rot(int n, int *x, int *y, int rx, int ry) {
+    if (ry == 0) {
+        if (rx == 1) {
+            *x = n-1 - *x;
+            *y = n-1 - *y;
+        }
 
+        //Swap x and y
+        int t  = *x;
+        *x = *y;
+        *y = t;
+    }
+}
 
+int xy2d (int n, int x, int y) {
+    int rx, ry, s, d=0;
+    for (s=n/2; s>0; s/=2) {
+        rx = (x & s) > 0;
+        ry = (y & s) > 0;
+        d += s * s * ((3 * rx) ^ ry);
+        rot(n, &x, &y, rx, ry);
+    }
+    return d;
+}
 
 double * fp_glob;
 int ** mapping;
-
-struct point{
-	int x;
-	int y;
-};
-
-struct point * array;
-
-int sgn(int x){
-	return (x > 0) - (x < 0);
-
-}
-void gilbert2d(int x, int y, int ax, int ay, int bx, int by)
-{
-
-	int w = abs(ax + ay);
-	int h = abs(bx + by);
-	int dax=sgn(ax);
-	int day=sgn(ay);
-	int dbx=sgn(bx);
-	int dby=sgn(by);
-
-	if (h == 1){
-		// trivial row fill
-		for(int i=0;i<w;i++){
-			array->x=x;
-			array->y=y;
-			array++;
-			x=x+dax;
-			y=y+day;
-		}
-		return;
-	}
-	if (w == 1){
-		// trivial  column fill
-		for(int i=0;i<h;i++){
-			array->x=x;
-			array->y=y;
-			array++;
-			x=x+dbx;
-			y=y+dby;
-		}
-		return;
-	}
-
-	int ax2=ax/2;
-	int ay2=ay/2;
-	int bx2=bx/2;
-	int by2=by/2;
-
-
-
-	int w2 = abs(ax2 + ay2);
-	int h2 = abs(bx2 + by2);
-	if( 2*w > 3*h){
-		if (w2 % 2&&w > 2){
-			// prefer even steps
-			ax2=ax2 + dax;
-			ay2=ay2 + day;
-		}
-		// long case: split in two parts only
-		gilbert2d(x, y, ax2, ay2, bx, by);
-		gilbert2d(x+ax2, y+ay2, ax-ax2, ay-ay2, bx, by);
-	}
-	else
-	{
-		if (h2 % 2&&h > 2){
-			// prefer even steps
-			bx2=bx2 + dbx;
-			by2=by2 + dby;
-		}
-		//# standard case: one step up, one long horizontal, one step down
-		gilbert2d(x, y, bx2, by2, ax2, ay2);
-		gilbert2d(x+bx2, y+by2, ax, ay, bx-bx2, by-by2);
-		gilbert2d(x+(ax-dax)+(bx2-dbx), y+(ay-day)+(by2-dby),-bx2, -by2, -(ax-ax2), -(ay-ay2));
-
-
-	}
-
-
-
-}
 
 struct parent_box{
 	int num;
@@ -103,48 +43,6 @@ struct parent_box{
 };
 struct parent_box **box_mapping;
 int Part1By1(int x);
-int EncodeMorton2(int x, int y)
-{
-	return (Part1By1(y) << 1) + Part1By1(x);
-}
-
-
-// "Insert" a 0 bit after each of the 16 low bits of x
-int Part1By1(int x)
-{
-	x &= 0x0000ffff;                  // x = ---- ---- ---- ---- fedc ba98 7654 3210
-	x = (x ^ (x <<  8)) & 0x00ff00ff; // x = ---- ---- fedc ba98 ---- ---- 7654 3210
-	x = (x ^ (x <<  4)) & 0x0f0f0f0f; // x = ---- fedc ---- ba98 ---- 7654 ---- 3210
-	x = (x ^ (x <<  2)) & 0x33333333; // x = --fe --dc --ba --98 --76 --54 --32 --10
-	x = (x ^ (x <<  1)) & 0x55555555; // x = -f-e -d-c -b-a -9-8 -7-6 -5-4 -3-2 -1-0
-	return x;
-}
-
-
-
-// Inverse of Part1By1 - "delete" all odd-indexed bits
-int Compact1By1(int x)
-{
-	x &= 0x55555555;                  // x = -f-e -d-c -b-a -9-8 -7-6 -5-4 -3-2 -1-0
-	x = (x ^ (x >>  1)) & 0x33333333; // x = --fe --dc --ba --98 --76 --54 --32 --10
-	x = (x ^ (x >>  2)) & 0x0f0f0f0f; // x = ---- fedc ---- ba98 ---- 7654 ---- 3210
-	x = (x ^ (x >>  4)) & 0x00ff00ff; // x = ---- ---- fedc ba98 ---- ---- 7654 3210
-	x = (x ^ (x >>  8)) & 0x0000ffff; // x = ---- ---- ---- ---- fedc ba98 7654 3210
-	return x;
-}
-
-
-
-
-int DecodeMorton2X(int code)
-{
-	return Compact1By1(code >> 0);
-}
-
-int DecodeMorton2Y(int code)
-{
-	return Compact1By1(code >> 1);
-}
 
 
 
@@ -490,116 +388,6 @@ void mapping_by_box(struct datapoint **data, int cnt [Level],struct box **boxes,
 
 
 
-void leveldata_box(struct datapoint **data, int cnt [Level],struct box **boxes,int box_cnt[Level],int col)
-{
-	clock_t start_t, end_t; double total_t;
-
-	start_t = clock();
-	int i,j;
-	char filename[50];
-	sprintf(filename,"Level_box_%d.dat",col);
-	FILE *fp=fopen(filename,"w");
-
-	for(i=0;i<Level;i++)
-	{
-		for(j=0;j<cnt[i];j++)
-		{
-			fwrite(&data[i][j].val,sizeof(double),1,fp);
-		}
-
-	}
-	fclose(fp);
-
-}
-
-
-
-
-void leveldata_box_level(struct datapoint **data, int cnt [Level],struct box **boxes,int box_cnt[Level],int col)
-{
-	clock_t start_t, end_t, total_t;
-
-	start_t = clock();
-	int i,j;
-	char filename[50];
-	sprintf(filename,"Level_box_levelreordering_%d.dat",col);
-	FILE *fp=fopen(filename,"w");
-
-	mapping_by_box(data,cnt,boxes,box_cnt);
-	struct node** trees;
-	trees=malloc(Level*sizeof(* trees));
-	for(i=0;i<Level;i++)
-		trees[i]=malloc(cnt[i]*sizeof(struct node));
-	for(i=0;i<Level;i++)
-
-	{
-
-		for(j=0;j<cnt[i];j++)
-		{
-
-
-			trees[i][j].x=data[i][j].a;
-			trees[i][j].y=data[i][j].b;
-			trees[i][j].val=data[i][j].val;
-			trees[i][j].flag=0;
-		}
-
-	}
-
-
-	for(i=Level-1;i>0;i--)
-	{
-		for(j=0;j<cnt[i];j++)
-		{       
-
-			int father_index=mapping[i][j];
-			struct	node *p=trees[i-1][father_index].fchild;
-			if (p==NULL)
-				trees[i-1][father_index].fchild=&trees[i][j];
-			else
-			{
-				while(p->next!=NULL)
-					p=p->next;
-				p->next=&trees[i][j];
-			}
-
-
-
-
-		}
-
-
-	}
-
-	int datasize=0;
-	for(i=0;i<Level;i++)
-		datasize=datasize+cnt[i];
-	double *dataArray=malloc(datasize*sizeof(double));
-
-	fp_glob=dataArray;
-	for(i=0;i<1;i++)
-		for(j=0;j<cnt[i];j++)
-		{
-			struct  node *p=&trees[i][j];
-			PrintTree(p,1);
-
-		}
-
-	for(i=0;i<Level;i++)
-		for(j=0;j<cnt[i];j++)
-		{
-			if(trees[i][j].flag==0)                      
-				printf("Not visit %d,%d\n",i,j);
-
-		}
-
-	fwrite(dataArray,sizeof(double),datasize,fp);
-	fclose(fp);
-	free(dataArray);
-	for(i=0;i<Level;i++)
-		free(trees[i]);
-	free(trees);
-}
 
 
 
@@ -634,20 +422,34 @@ void leveldata_box_hilbert(struct datapoint **data, int cnt [Level],struct box *
 		{
 			int a=boxes[i][j].y2-boxes[i][j].y1;
 			int b=boxes[i][j].x2-boxes[i][j].x1;
+                        int n=1;
+                        while(n<b||n<a) n=n<<1;
+			int z_size= n*n;
+			//printf("%d,%d,%d\n",a,b,z_size);
+			int *z_index=malloc(z_size*sizeof(int));
+			for(k=0;k<z_size;k++){
+				z_index[k]=-1;
+			}
 
 			int box_size=(a+1)*(b+1);
+
+			for(int m=0;m<=b;m++)
+				for(int l=0;l<=a;l++)
+				{
+					//z_index[EncodeMorton2(l,m)]=l+m*(a+1);
+					z_index[xy2d(n,l,m)]=l+m*(a+1);
+				}
 			int *recipe_en=malloc(box_size*sizeof(int));
-			struct point * p_point=malloc(box_size*sizeof(struct point));
-			array=p_point;
-			if (a >= b)
-				gilbert2d(0, 0, a+1, 0, 0, b+1);
-			else
-				gilbert2d(0, 0, 0, b+1, a+1, 0);
-			for(int m=0;m<box_size;m++)
-			{
-				recipe_en[m]=p_point[m].x+p_point[m].y*(a+1);
+			int tr=0;
+			for(k=0;k<z_size;k++){
+				if(z_index[k]!=-1)
+					recipe_en[tr++]=z_index[k];
 			}
-                        free(p_point);
+			if(tr!=box_size){
+				printf("tr!=box_size, %d, %d\n",tr,box_size);
+				for (k=0;k<box_size;k++)
+					printf("%d ",recipe_en[k]);
+			}
 			for(k=0;k<box_size;k++)
 			{
 				trees[i][offset+k].x=data[i][offset+recipe_en[k]].a;
@@ -656,6 +458,7 @@ void leveldata_box_hilbert(struct datapoint **data, int cnt [Level],struct box *
 			}
 
 			offset+=box_size;
+			free(z_index);
 			free(recipe_en);
 		}
 
@@ -735,29 +538,25 @@ void leveldata_box_hilbert_level(struct datapoint **data, int cnt [Level],struct
 			recipe_de=malloc(cnt[i]*sizeof(int));
 		for(j=0;j<box_cnt[i];j++)
 		{
-int a=boxes[i][j].y2-boxes[i][j].y1;
-                        int b=boxes[i][j].x2-boxes[i][j].x1;
-                        int z_size= (a+1)*(b+1);
-                        int *z_index=malloc(z_size*sizeof(int));
-                        //memset (z_index,-1,z_size*sizeof(int));
-                        for(k=0;k<z_size;k++){
-                                z_index[k]=-1;
-                        }
+			int a=boxes[i][j].y2-boxes[i][j].y1;
+			int b=boxes[i][j].x2-boxes[i][j].x1;
+                        int n=1;
+                        while(n<b||n<a) n=n<<1;
+			int z_size= n*n;
+			int *z_index=malloc(z_size*sizeof(int));
+			//memset (z_index,-1,z_size*sizeof(int));
+			for(k=0;k<z_size;k++){
+				z_index[k]=-1;
+			}
 
-                        int box_size=(a+1)*(b+1);
-                        struct point * p_point=malloc(box_size*sizeof(struct point));
-                        array=p_point;
-                        if (a >= b)
-                                gilbert2d(0, 0, a+1, 0, 0, b+1);
-                        else
-                                gilbert2d(0, 0, 0, b+1, a+1, 0);
+			int box_size=(a+1)*(b+1);
 
-                        for(int m=0;m<box_size;m++)
-                        {
-                                z_index[m]=p_point[m].x+p_point[m].y*(a+1);
-                        }
-                        free(p_point);
-
+			for(int m=0;m<=b;m++)
+				for(int l=0;l<=a;l++)
+				{
+					//z_index[EncodeMorton2(l,m)]=l+m*(a+1);
+					z_index[xy2d(n,l,m)]=l+m*(a+1);
+				}
 			int *recipe_en=malloc(box_size*sizeof(int));
 			int tr=0;
 			for(k=0;k<z_size;k++){
@@ -813,14 +612,14 @@ int a=boxes[i][j].y2-boxes[i][j].y1;
 	printf("LevelRe_Zordering: %lf\n", total_t  );
 
 
-	for(i=Level-1;i>0;i--)
-		for(j=0;j<cnt[i];j++)
-		{
-			if(trees[i][j].x/Refine_ratio!=trees[i-1][mapping[i][trees[i][j].index]].x||trees[i][j].y/Refine_ratio!=trees[i-1][mapping[i][trees[i][j].index]].y)
-				printf("error! %d,%d: %d, %d\n",trees[i][j].x,trees[i-1][mapping[i][trees[i][j].index]].x,trees[i][j].y,trees[i-1][mapping[i][trees[i][j].index]].y);
-		}
+		   for(i=Level-1;i>0;i--)
+		   for(j=0;j<cnt[i];j++)
+		   {
+		   if(trees[i][j].x/Refine_ratio!=trees[i-1][mapping[i][trees[i][j].index]].x||trees[i][j].y/Refine_ratio!=trees[i-1][mapping[i][trees[i][j].index]].y)
+		   printf("error! %d,%d: %d, %d\n",trees[i][j].x,trees[i-1][mapping[i][trees[i][j].index]].x,trees[i][j].y,trees[i-1][mapping[i][trees[i][j].index]].y);
+		   }
 
-
+	 
 	start_t=clock();
 
 
@@ -923,8 +722,6 @@ int main()
 		for(i=0;i<Level;i++)
 			box_mapping[i]=malloc(box_cnt[i]*sizeof(struct parent_box));
 
-		//	leveldata_box(data,cnt,boxes,box_cnt,col);
-		//	leveldata_box_level(data,cnt,boxes,box_cnt,col);
 		leveldata_box_hilbert(data,cnt,boxes,box_cnt,col);
 		leveldata_box_hilbert_level(data,cnt,boxes,box_cnt,col);
 		for(i=0;i<Level;i++)	
