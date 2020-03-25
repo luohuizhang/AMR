@@ -41,7 +41,7 @@ plt.rc('xtick', labelsize=14)          # fontsize of the tick labels
 plt.rc('ytick', labelsize=14)
 #plt.ylim(y1,y2)   
 #plt.xticks(np.arange(0,260000,50000))
-#plt.yticks(np.linspace(y1,y2+50,5));
+plt.yticks(np.linspace(y1,2000,5));
 #y_major_locator=plt.MultipleLocator(5000)
 #plt.yaxis.set_major_locator(y_major_locator)
 plt.xticks(np.linspace(x1,x2,4));

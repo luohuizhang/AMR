@@ -25,8 +25,8 @@ x2=int(fsize/8);
 y1=min(vals)
 y2=max(vals)
 plt.figure(num=None,figsize=(3.5,3))
-plt.rc('xtick', labelsize=12)          # fontsize of the tick labels
-plt.rc('ytick', labelsize=12)
+plt.rc('xtick', labelsize=14)          # fontsize of the tick labels
+plt.rc('ytick', labelsize=14)
 #plt.xlim(-60,60)   
 plt.xlim(y1,y2)
 #plt.xticks(np.arange(0,260000,50000))
@@ -52,5 +52,5 @@ n, bins, patches=plt.hist(vals,bins=100,normed=True,histtype='bar', label='pdf',
 
 plt.tight_layout()
 #plt.savefig('/home/luo/Dropbox/SC2019_Huizhang/AMR2019/figures/fig_frequency_zordering.pdf', format='pdf')
-plt.savefig('/home/luo/Dropbox/SC2019_Huizhang/AMR2019/figures/fig_'+sys.argv[2]+'.png', format='png')
+plt.savefig('/home/luo/Dropbox/SC2019_Huizhang/HPDC/SC20/figures/fig_'+sys.argv[2]+'.pdf', format='pdf',bbox_inches="tight")
 #plt.show()

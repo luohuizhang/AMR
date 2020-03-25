@@ -32,21 +32,23 @@ font = {'size':'24'}
 
 
 
-rects1 = ax.bar(ind-width, y1, width, color='g',label="Z")
-rects2 = ax.bar(ind, y2, width, color='r',label="Z+LevelRe")
-rects3 = ax.bar(ind+width, y3, width, color='b',label="H")
-rects4 = ax.bar(ind+2*width, y4, width, color='y',label="H+LevelRe")
+rects1 = ax.bar(ind-width, y1, width, color='g',label="Z-order")
+rects2 = ax.bar(ind, y2, width, color='r',label="Z-order+zMesh")
+rects3 = ax.bar(ind+width, y3, width, color='b',label="Hilbert")
+rects4 = ax.bar(ind+2*width, y4, width, color='y',label="Hilbert+zMesh")
 ax.set_ylabel('MAC',font)
-ax.set_ylim([0,100])
+ax.set_ylim([0,150])
+y_major_locator=plt.MultipleLocator(30)
+ax.yaxis.set_major_locator(y_major_locator)
 
 #ax.set_title("ZFP",axis_font)
 ax.set_xticks(ind+width)
 ax.set_xticklabels( namelist )
-ax.set_xlim([-0.5,18])
-ax.legend(loc="upper right",ncol=4, prop=font)
+ax.set_xlim([-0.3,17.8])
+ax.legend(loc="upper right",ncol=2, prop=font)
 
 
-plt.savefig(name_hat+'MAC_Zordering.pdf', format='pdf',bbox_inches="tight")
+plt.savefig(name_hat+'MAC_Zordering.pdf', format='pdf',bbox_inches="tight",pad_inches=0)
 plt.show()
 
 

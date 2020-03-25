@@ -16,7 +16,7 @@ x =[2,3,4,5,6,7,8,9]
 #z5 = [1.621,1.740,1.973,2.273,2.446,2.485,2.460,2.596]
 
 datasize=[39572.0,67736,128016,263044,543712,1094888,2227500,4574888]
-for j in range(0,5):
+for j in range(0,10):
     for i in range (0,8):
         data[i][j]=134217728/datasize[i]*data[i][j]
 y1 = data[:,0]
@@ -24,6 +24,11 @@ y2 = data[:,1]
 y3 =data[:,2]
 y4 =data[:,3]
 y5 =data[:,4]
+y6 = data[:,5]
+y7 = data[:,6]
+y8 =data[:,7]
+y9 =data[:,8]
+y10 =data[:,9]
 namelist=["2","3","4","5","6","7","8","9"]
 fig = plt.figure(num=None,figsize=(20,5))
 #fig = plt.figure()
