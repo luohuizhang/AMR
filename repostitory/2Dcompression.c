@@ -2,13 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "zfp.h"
+#include "sz.h"
+#define Level 6
 #define Refine_ratio 2
+#define SIZE_MAX1  2147483647
+#define Error_ratio 0.001
 
-#define Level 9
-#define Error_ratio 0.0001
 
-
-#define Num_run 1
 
 
 
@@ -395,15 +396,167 @@ void mapping_by_box(struct datapoint **data, int cnt [Level],struct box **boxes,
 	  }*/
 
 }
+	int
+zfp1_compress (double * array, int nx, double tolerance, char filename[50]
+	      )
+{
+	zfp_type type;     /* array scalar type */
+	zfp_field* field;  /* array meta data */
+	zfp_stream* zfp;   /* compressed stream */
+	void* buffer;      /* storage for compressed stream */
+	size_t bufsize;    /* byte size of compressed buffer */
+	bitstream * stream; /* bit stream to write to or read from */
+	size_t zfpsize;    /* byte size of compressed stream */
+
+	/* allocate meta data for the 3D array a[nz][ny][nx] */
+	type = zfp_type_double;
+	field = zfp_field_1d (array, type, nx);
+
+	/* allocate meta data for a compressed stream */
+	zfp = zfp_stream_open (NULL);
+
+	/* set compression mode and parameters via one of three functions */
+	/*  zfp_stream_set_rate(zfp, rate, type, 3, 0); */
+	/* A_precision = zfp_stream_set_precision(zfp, precision, type);*/
+	zfp_stream_set_accuracy (zfp, tolerance);
 
 
+	/* allocate buffer for compressed data */
+	bufsize = zfp_stream_maximum_size (zfp, field);
+	buffer = malloc (bufsize);
+	assert (buffer);
+	/* associate bit stream with allocated buffer */
+	stream = stream_open (buffer, bufsize);
+	zfp_stream_set_bit_stream (zfp, stream);
+	zfp_stream_rewind (zfp);
+
+	/* compress array and output compressed stream */
+	//zfpsize = zfp_compress (zfp, field);
+	zfpsize = zfp_compress(zfp, field);
+	if (!zfpsize) {
+		fprintf(stderr, "compression failed\n");
+	}
+	else{
+		FILE *fp=fopen(filename,"w");
+
+		fwrite(buffer, 1, zfpsize, fp);
+		fclose(fp);
+	}
+	assert (zfpsize);
+	zfp_field_free (field);
+	zfp_stream_close (zfp);
+	stream_close (stream);
+
+	free( buffer);
+
+	return zfpsize;
+}
+
+
+	int
+zfp2_compress (double * array, int nx, int ny, double tolerance )
+{
+	zfp_type type;     /* array scalar type */
+	zfp_field* field;  /* array meta data */
+	zfp_stream* zfp;   /* compressed stream */
+	void* buffer;      /* storage for compressed stream */
+	size_t bufsize;    /* byte size of compressed buffer */
+	bitstream * stream; /* bit stream to write to or read from */
+	size_t zfpsize;    /* byte size of compressed stream */
+
+	/* allocate meta data for the 3D array a[nz][ny][nx] */
+	type = zfp_type_double;
+	field = zfp_field_2d (array, type, nx,ny);
+
+	/* allocate meta data for a compressed stream */
+	zfp = zfp_stream_open (NULL);
+
+	/* set compression mode and parameters via one of three functions */
+	/*  zfp_stream_set_rate(zfp, rate, type, 3, 0); */
+	/* A_precision = zfp_stream_set_precision(zfp, precision, type);*/
+	zfp_stream_set_accuracy (zfp, tolerance);
+
+
+	/* allocate buffer for compressed data */
+	bufsize = zfp_stream_maximum_size (zfp, field);
+	buffer = malloc (bufsize);
+	assert (buffer);
+	/* associate bit stream with allocated buffer */
+	stream = stream_open (buffer, bufsize);
+	zfp_stream_set_bit_stream (zfp, stream);
+	zfp_stream_rewind (zfp);
+
+	/* compress array and output compressed stream */
+	//zfpsize = zfp_compress (zfp, field);
+	zfpsize = zfp_compress(zfp, field);
+	if (!zfpsize) {
+		fprintf(stderr, "compression failed\n");
+	}
+	assert (zfpsize);
+	zfp_field_free (field);
+	zfp_stream_close (zfp);
+	stream_close (stream);
+
+	free( buffer);
+
+	return zfpsize;
+}
+
+
+
+	int
+zfp1_decompress (double * array, int nx, double tolerance,char filename[50])
+{
+	zfp_type type;     /* array scalar type */
+	zfp_field* field;  /* array meta data */
+	zfp_stream* zfp;   /* compressed stream */
+	bitstream * stream; /* bit stream to write to or read from */
+	size_t zfpsize;    /* byte size of compressed stream */
+
+	void* buffer;      /* storage for compressed stream */
+	size_t bufsize;    /* byte size of compressed buffer */
+
+	/* allocate meta data for the 3D array a[nz][ny][nx] */
+	type = zfp_type_double;
+	field = zfp_field_1d (array, type, nx);
+
+	/* allocate meta data for a compressed stream */
+	zfp = zfp_stream_open (NULL);
+	zfp_stream_set_accuracy (zfp, tolerance);
+
+
+	//allocate buffer for compressed data 
+	bufsize = zfp_stream_maximum_size (zfp, field);
+	buffer = malloc (bufsize);
+	assert (buffer);
+	stream = stream_open (buffer, bufsize);
+	zfp_stream_set_bit_stream (zfp, stream);
+	zfp_stream_rewind (zfp);
+
+
+	FILE *fp=fopen(filename,"r");
+	//fread(array_compressed, 1, array_size_compressed, fp);
+	zfpsize = fread(buffer, 1, bufsize, fp);
+	fclose(fp);
+
+	if (!zfp_decompress(zfp, field)) {
+		fprintf(stderr, "decompression failed\n");
+	}
+
+	/* clean up */
+	zfp_field_free (field);
+	zfp_stream_close (zfp);
+	stream_close (stream);
+	free(buffer);
+	return 0;
+}
 
 
 void  get_baseline_encode_recipe(int *encode_recipe, int cnt [Level],struct box **boxes,int box_cnt[Level])
 {
-	clock_t start_t, end_t; double total_t;
+	//	clock_t start_t, end_t; double total_t;
 
-	start_t = clock();
+	//	start_t = clock();
 	int i,j,k;
 
 	int datasize=0;
@@ -455,21 +608,21 @@ void  get_baseline_encode_recipe(int *encode_recipe, int cnt [Level],struct box 
 		level_offset+=cnt[i];
 	}
 
-	end_t = clock();
-	total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
-	printf("%lf ", total_t  );
+	//end_t = clock();
+	//total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
+	//printf("get_baseline_encode_recipe: %lf\n", total_t  );
 
 
 
 
 }
 
-
 void get_levelRe_encode_recipe(struct datapoint **data,int *encode_recipe, int cnt [Level],struct box **boxes,int box_cnt[Level])
 {
-	clock_t start_t, end_t; double total_t;
-	start_t = clock();
+	//	clock_t start_t, end_t; double total_t;
+	//	start_t = clock();
 	int i,j,k;
+	FILE *fp;
 	struct node** trees;
 	trees=malloc(Level*sizeof(* trees));
 	for(i=0;i<Level;i++)
@@ -479,13 +632,10 @@ void get_levelRe_encode_recipe(struct datapoint **data,int *encode_recipe, int c
 		datasize=datasize+cnt[i];
 
 	mapping_by_box(data,cnt,boxes,box_cnt);
-	end_t = clock();
-	total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
-	printf("%lf ", total_t  );
-
-
-	start_t = clock();
 	int offset=0;
+
+
+
 	int* recipe_de;
 	int level_offset=0;
 	for(i=0;i<Level;i++)
@@ -562,11 +712,8 @@ void get_levelRe_encode_recipe(struct datapoint **data,int *encode_recipe, int c
 		   }
 
 	 */
-	end_t = clock();
-	total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
-	printf("%lf ", total_t  );
 
-	start_t=clock();
+
 	for(i=Level-1;i>0;i--)
 	{
 		for(j=0;j<cnt[i];j++)
@@ -590,11 +737,6 @@ void get_levelRe_encode_recipe(struct datapoint **data,int *encode_recipe, int c
 
 	}
 
-	end_t = clock();
-	total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
-	printf("%lf ", total_t  );
-
-	start_t=clock();
 	fp_glob=encode_recipe;
 	for(i=0;i<1;i++)
 		for(j=0;j<cnt[i];j++)
@@ -609,9 +751,9 @@ void get_levelRe_encode_recipe(struct datapoint **data,int *encode_recipe, int c
 		free(trees[i]);
 	free(trees);
 
-	end_t = clock();
-	total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
-	printf("%lf\n", total_t  );
+	//	end_t = clock();
+	//	total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
+	//	printf("get_levelRe_encode_recipe: %lf\n", total_t  );
 
 }
 
@@ -623,20 +765,18 @@ void get_levelRe_encode_recipe(struct datapoint **data,int *encode_recipe, int c
 
 int main(int argc, char **argv)
 {
-	if(argc<2){
-		printf("Usage:%s inputfile\n",argv[0]);
-		return 0;
-	}
-
 	int i,j,cnt[Level],box_cnt[Level],read_cnt;
 	struct datapoint** data;
 	data=malloc(Level*sizeof(* data)); 
 	struct box** boxes;
 	boxes=malloc(Level*sizeof(* boxes));
 
+	int list[6]={0,1,2,4,11,12}; 
+	char filename[50];
+	sprintf(filename,"datapoint_%d",list[0]);
 
 
-	FILE *fp=fopen(argv[1],"r");
+	FILE *fp=fopen(filename,"r");
 	if (fp==NULL)
 	{
 		printf("Can not open file\n");
@@ -650,9 +790,9 @@ int main(int argc, char **argv)
 	for(i=0;i<Level;i++)
 	{
 		read_cnt=fread(&cnt[i],sizeof(int),1,fp);
-		//		printf("data count= %d\n", cnt[i]);
+		//	printf("data count= %d\n", cnt[i]);
 		read_cnt=fread(&box_cnt[i],sizeof(int),1,fp);
-		//		printf("box_cnt= %d\n", box_cnt[i]);
+		//	printf("box_cnt= %d\n", box_cnt[i]);
 		boxes[i]=malloc(box_cnt[i]*sizeof(struct box));
 		read_cnt=fread(boxes[i],sizeof(struct box),box_cnt[i],fp);
 		data[i]=malloc(cnt[i]*sizeof(struct datapoint));
@@ -678,39 +818,174 @@ int main(int argc, char **argv)
 	int datasize=0;
 	for(i=0;i<Level;i++)
 		datasize=datasize+cnt[i];
-	int *   recipe_en_baseline=malloc(datasize*sizeof(int));
+	double *data_levelRe=malloc(datasize*sizeof(double));
+	double *data_level=malloc(datasize*sizeof(double));
+	double *data_baseline=malloc(datasize*sizeof(double));
 	int *   recipe_en_levelRe=malloc(datasize*sizeof(int));
-
-
-	for(i=0;i<Num_run;i++){
-		get_baseline_encode_recipe(recipe_en_baseline,cnt,boxes,box_cnt);
-	}
+	int *   recipe_en_baseline=malloc(datasize*sizeof(int));
 
 
 
-	for(i=0;i<Num_run;i++){
-		get_levelRe_encode_recipe(data,recipe_en_levelRe,cnt,boxes,box_cnt);
-	}
+	get_levelRe_encode_recipe(data,recipe_en_levelRe,cnt,boxes,box_cnt);
+	get_baseline_encode_recipe( recipe_en_baseline,cnt,boxes,box_cnt);
 
 
 
 
-
-
-	for(i=0;i<Level;i++)
-		free(mapping[i]);
-	free(mapping);
-	for(i=0;i<Level;i++)
-		free(box_mapping[i]);
 
 	for(i=0;i<Level;i++)	
 		free(data[i]);
 	for(i=0;i<Level;i++)
 		free(boxes[i]);
+	for(i=0;i<Level;i++)
+		free(mapping[i]);
+	free(mapping);
+	for(i=0;i<Level;i++)
+		free(box_mapping[i]);
 	free(box_mapping);
+	double  t_compress_levelRe_zfp=0;
+	double  t_compress_levelRe_sz=0;
+	double  fullsize=datasize*sizeof(double);
+	double compressedsize=0;
+	double compressedsize_baseline=0;
+	double compressedsize_levelRe=0;
+	for(int col=0;col<1;col++){
+		sprintf(filename,"datapoint_%d",list[col]);
+
+		fp=fopen(filename,"r");
+		if (fp==NULL)
+		{
+			printf("Can not open file\n");
+			return 0;
+
+		}
+
+
+
+
+		for(i=0;i<Level;i++)
+		{
+			read_cnt=fread(&cnt[i],sizeof(int),1,fp);
+			read_cnt=fread(&box_cnt[i],sizeof(int),1,fp);
+			boxes[i]=malloc(box_cnt[i]*sizeof(struct box));
+			read_cnt=fread(boxes[i],sizeof(struct box),box_cnt[i],fp);
+			data[i]=malloc(cnt[i]*sizeof(struct datapoint));
+			read_cnt=fread(data[i],sizeof(struct datapoint),cnt[i],fp);
+			//for(j=0;j<cnt[i];j++)
+			//	printf("%d %d %lf\n", data[i][j].a,data[i][j].b,data[i][j].val);
+		}
+		fclose(fp);
+
+		int offset=0;
+		double max=-100000000;
+		double min=100000000;
+		for(i=0;i<Level;i++)
+			for(j=0;j<cnt[i];j++)
+			{
+				data_level[offset]=data[i][j].val;
+				if( data_level[offset]>max)
+					max= data_level[offset];
+				if( data_level[offset]<min)
+					min= data_level[offset];
+				offset++;
+
+			}
+		double Errbound=Error_ratio*(max-min);
+		//	double Errbound=Error_ratio*max;
+		if(Errbound>10000)
+			Errbound=100;
+
+		for(int i1=0;i1<datasize;i1++)
+		{
+			data_levelRe[i1]=data_level[recipe_en_levelRe[i1]]; 
+			data_baseline[i1]=data_level[recipe_en_baseline[i1]]; 
+		}  
+		//		printf("EB:%lf\n",Errbound);
+		char compressed_name[50];
+		sprintf(compressed_name,"LevelRe_%d.zfp",list[col]);  
+
+		for(i=4;i<=datasize/4;i=i*2)
+		{
+			int ny=i;
+			int nx=datasize/i;
+
+			compressedsize=zfp2_compress(data_level,nx,ny,Errbound); 
+			if(datasize>nx*ny)
+				compressedsize+=zfp1_compress(data_level+nx*ny,datasize-nx*ny,Errbound,"luo");
+			compressedsize_baseline=zfp2_compress(data_baseline,nx,ny,Errbound); 
+			if(datasize>nx*ny)
+				compressedsize_baseline+=zfp1_compress(data_baseline+nx*ny,datasize-nx*ny,Errbound,"luo");
+			compressedsize_levelRe=zfp2_compress(data_levelRe,nx,ny,Errbound); 
+			if(datasize>nx*ny)
+				compressedsize_levelRe+=zfp1_compress(data_levelRe+nx*ny,datasize-nx*ny,Errbound,"luo");
+		        printf("%lf\n",fullsize/compressedsize);
+			printf("%lf\n",fullsize/compressedsize_baseline);
+			printf("%lf\n",fullsize/compressedsize_levelRe);
+		}
+
+
+		printf("\n");
+
+
+		char *confFile = "/home/luo/ZFP/SZ/sz.config";
+		size_t outSize;
+		int r4 = 0, r3 = 0, r2 = 0, r5 = 0;
+		SZ_Init(confFile);
+		confparams_cpr->absErrBound =Errbound; 
+		unsigned char *compressed;
+		double* decompressed;
+
+		for(i=4;i<=datasize/4;i=i*2){
+			int ny=i;
+			int nx=datasize/i;
+
+			compressed = SZ_compress(SZ_DOUBLE, data_level, &outSize, r5, r4, r3, ny ,nx);
+			free(compressed);
+			compressedsize=outSize;
+			if(datasize>nx*ny){
+				compressed = SZ_compress(SZ_DOUBLE, data_level+nx*ny, &outSize, r5, r4, r3, r2 ,datasize-nx*ny);
+				free(compressed);
+				compressedsize+=outSize;
+			}
+
+			compressed = SZ_compress(SZ_DOUBLE, data_baseline, &outSize, r5, r4, r3, ny ,nx);
+			free(compressed);
+			compressedsize_baseline=outSize;
+			if(datasize>nx*ny){
+				compressed = SZ_compress(SZ_DOUBLE, data_baseline+nx*ny, &outSize, r5, r4, r3, r2 ,datasize-nx*ny);
+				free(compressed);
+				compressedsize_baseline+=outSize;
+			}
+
+			compressed = SZ_compress(SZ_DOUBLE, data_levelRe, &outSize, r5, r4, r3, ny ,nx);
+			free(compressed);
+			compressedsize_levelRe=outSize;
+			if(datasize>nx*ny){
+				compressed = SZ_compress(SZ_DOUBLE, data_levelRe+nx*ny, &outSize, r5, r4, r3, r2 ,datasize-nx*ny);
+				free(compressed);
+				compressedsize_levelRe+=outSize;
+			}
+			printf("%lf\n",fullsize/compressedsize);
+			printf("%lf\n",fullsize/compressedsize_baseline);
+			printf("%lf\n",fullsize/compressedsize_levelRe);
+		}
+
+		printf("\n");
+
+
+		for(i=0;i<Level;i++)	
+			free(data[i]);
+		for(i=0;i<Level;i++)
+			free(boxes[i]);
+	}
+	//	printf("t_compress_levelRe_zfp: %lf\n",t_compress_levelRe_zfp);
+	//	printf("t_compress_levelRe_sz: %lf\n",t_compress_levelRe_sz);
 	free(boxes);
 	free(data);
-	free(recipe_en_baseline);
 	free(recipe_en_levelRe);
+	free( recipe_en_baseline);
+	free(data_level);
+	free(data_levelRe);
+	free(data_baseline);
 	return 1;
 }

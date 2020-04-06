@@ -34,89 +34,98 @@ z7 = data_H[:,1]
 z8 = data_H[:,2] 
 z9 = data_H[:,3] 
 z10 =data_H[:,4]
-
+z0=np.zeros(8,dtype=float)
 #fig = plt.figure(num=None,figsize=(12,7))
-fig = plt.figure(num=None,figsize=(8,4))
-axis_font = {'size':'24'}
-plt.rc('xtick', labelsize=24)          # fontsize of the tick labels
-plt.rc('ytick', labelsize=24)
-font = {'size':'24'}
+fig = plt.figure(num=None,figsize=(19,3.5))
+axis_font = {'size':'28'}
+plt.rc('xtick', labelsize=28)          # fontsize of the tick labels
+plt.rc('ytick', labelsize=28)
+font = {'size':'28'}
 
 
 N = len(x)
 ind = np.arange(N)  # the x locations for the groups
 width = 0.2       # the width of the bars
 
-ax = fig.add_subplot(111)
+ax = fig.add_subplot(121)
 
-rects1 = ax.bar(ind, z2, width, color='r',label="Z-order+zMesh")
-rects3 = ax.bar(ind+width, z7, width, color='y',label="Hilbert+zMesh")
 
-ax.set_ylabel('Time for 1GB data (s)',axis_font)
+rects1 = ax.bar(ind-width, z0, width, color='g',hatch='.',label="Z-order" )
+rects2 = ax.bar(ind, z2, width, color='r',hatch='+',label="Z-order+zMesh")
+rects3 = ax.bar(ind+width, z0, width, color='blue',hatch='x',label="Hilbert" )
+rects4 = ax.bar(ind+2*width, z7, width, color='y',hatch='/',label="Hilbert+zMesh")
+ax.set_ylabel('Time for 1GB\n data (s)',axis_font)
 ax.set_ylim([0,2])
 ax.set_xticks(ind+width)
 ax.set_xticklabels( x )
-ax.set_xlim([-0.1,7.5])
+ax.set_xlim([-0.3,7.7])
 ax.set_xlabel('Number of AMR levels',axis_font)
-ax.legend(loc=2, prop=font)
-ax.set_title("Initialization",axis_font)
+#ax.legend(loc=2, prop=font)
+plt.legend( (rects1[0], rects2[0],rects3[0],rects4[0]), ('Z-order', 'Z-order+zMesh',"Hilbert","Hilbert+zMesh") ,ncol=2, bbox_to_anchor=(1.8, 1.6),prop=font)
+#ax.set_title("Initialization",axis_font)
+#ax.set_xlabel("(b) SZ",{'family' : 'Times New Roman', 'size'   : 32})
+ax.text(2,-1,"(a) Initialization",{'family' : 'Times New Roman', 'size'   : 36})
 
-plt.savefig(name_hat+'Initialization_G.pdf', format='pdf',bbox_inches="tight")
-plt.show()
-fig = plt.figure(num=None,figsize=(8,4))
+ax = fig.add_subplot(122)
 
-ax = fig.add_subplot(111)
-
-rects1 = ax.bar(ind-width, z1, width, color='g',label="Z-order" )
-rects2 = ax.bar(ind, z3, width, color='r',label="Z-order+zMesh")
-rects3 = ax.bar(ind+width, z6, width, color='blue',label="Hilbert" )
-rects4 = ax.bar(ind+2*width, z8, width, color='y',label="Hilbert+zMesh")
-ax.set_ylabel('Time for 1GB data (s)',axis_font)
+rects1 = ax.bar(ind-width, z1, width, color='g',hatch='.',label="Z-order" )
+rects2 = ax.bar(ind, z3, width, color='r',hatch='+',label="Z-order+zMesh")
+rects3 = ax.bar(ind+width, z6, width, color='blue',hatch='x',label="Hilbert" )
+rects4 = ax.bar(ind+2*width, z8, width, color='y',hatch='/',label="Hilbert+zMesh")
+#ax.set_ylabel('Time for 1GB data (s)',axis_font)
 ax.set_xlabel('Number of AMR levels',axis_font)
 ax.set_xticks(ind+width)
-ax.set_ylim([0,15])
+ax.set_ylim([0,5])
 ax.set_xticklabels( x )
 ax.set_xlim([-0.3,7.7])
-ax.set_title("Space filling",axis_font)
-ax.legend( loc=0,ncol=1,prop=font)
-plt.savefig(name_hat+'Reordering_G.pdf', format='pdf',bbox_inches="tight")
-plt.show()
+#ax.set_title("Space filling",axis_font)
+ax.text(2,-2.5,"(b) Space filling",{'family' : 'Times New Roman', 'size'   : 36})
+#ax.legend( loc=0,ncol=1,prop=font)
 
-fig = plt.figure(num=None,figsize=(8,4))
+plt.savefig(name_hat+'fig_time_level_0.pdf', format='pdf',bbox_inches="tight")
+#plt.show()
 
-ax = fig.add_subplot(111)
+fig = plt.figure(num=None,figsize=(16,3.5))
+ax = fig.add_subplot(121)
 
-rects1 = ax.bar(ind, z4, width, color='r',label='Z-order+zMesh' )
-rects3 = ax.bar(ind+width, z9, width, color='y',label="Hilbert+zMesh")
+rects1 = ax.bar(ind-width, z0, width, color='g',hatch='.',label="Z-order" )
+rects2 = ax.bar(ind, z4, width, color='r',hatch='+',label="Z-order+zMesh")
+rects3 = ax.bar(ind+width, z0, width, color='blue',hatch='x',label="Hilbert" )
+rects4 = ax.bar(ind+2*width, z9, width, color='y',hatch='/',label="Hilbert+zMesh")
 
-ax.set_ylabel('Time for 1GB data (s)',axis_font)
-ax.set_ylim([0,3])
+ax.set_ylabel('Time for 1GB\n data (s)',axis_font)
+ax.set_ylim([0,2])
 ax.set_xlabel('Number of AMR levels',axis_font)
 ax.set_xticks(ind+width)
 ax.set_xticklabels( x )
-ax.set_xlim([-0.1,7.5])
+ax.set_xlim([-0.3,7.7])
 ax.set_xlabel('Number of AMR levels',axis_font)
-ax.legend(loc="up left",ncol=1,prop=font)
-ax.set_title("Tree building",axis_font)
-plt.savefig(name_hat+'Tree_Building_G.pdf', format='pdf',bbox_inches="tight")
-plt.show()
+#ax.legend(loc="up left",ncol=1,prop=font)
+#ax.set_title("Tree building",axis_font)
+
+ax.text(2,-1.3,"(c) Tree building",{'family' : 'Times New Roman', 'size'   : 36})
 
 
-fig = plt.figure(num=None,figsize=(8,4))
+ax = fig.add_subplot(122)
 
-ax = fig.add_subplot(111)
+rects1 = ax.bar(ind-width, z0, width, color='g',hatch='.',label="Z-order" )
+rects2 = ax.bar(ind, z5, width, color='r',hatch='+',label="Z-order+zMesh")
+rects3 = ax.bar(ind+width, z0, width, color='blue',hatch='x',label="Hilbert" )
+rects4 = ax.bar(ind+2*width, z10, width, color='y',hatch='/',label="Hilbert+zMesh")
 
-rects2 = ax.bar(ind, z5, width, color='r',label="Z-order+zMesh")
-rects4 = ax.bar(ind+width, z10, width, color='y',label="Hilbert+zMesh")
-
-ax.set_ylabel('Time for 1GB data (s)',axis_font)
-ax.set_ylim([0,3])
+#ax.set_ylabel('Time for 1GB data (s)',axis_font)
+ax.set_ylim([0,2])
+ax.set_xlabel('Number of AMR levels',axis_font)
 ax.set_xlabel('Number of AMR levels',axis_font)
 ax.set_xticks(ind+width)
 ax.set_xticklabels( x )
-ax.set_xlim([-0.1,7.5])
-ax.legend(loc=2,ncol=1, prop=font)
-ax.set_title("Traversing",axis_font)
-plt.savefig(name_hat+'Traveling_G.pdf', format='pdf',bbox_inches="tight")
-plt.show()
+#ax.set_xlim([-0.1,7.5])
+ax.set_xlim([-0.3,7.7])
+#ax.legend(loc=2,ncol=1, prop=font)
+#ax.set_title("Traversing",axis_font)
+ax.text(2,-1.3,"(d) Traversing",{'family' : 'Times New Roman', 'size'   : 36})
+plt.tight_layout()
+
+plt.savefig(name_hat+'fig_time_level_1.pdf', format='pdf',bbox_inches="tight")
+#plt.show()
 

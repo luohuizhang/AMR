@@ -64,6 +64,6 @@ plt.plot(vals,'b-');
 
 plt.tight_layout()
 #plt.savefig('/home/luo/Dropbox/SC2019_Huizhang/AMR2019/figures/fig_frequency_zordering.pdf', format='pdf')
-plt.savefig('/home/luo/Dropbox/SC2019_Huizhang/HPDC/SC20/figures/fig_'+sys.argv[2]+'.pdf', format='pdf')
+plt.savefig('/home/luo/Dropbox/SC2019_Huizhang/HPDC/SC20/figures/fig_'+sys.argv[2]+'.pdf', format='pdf',bbox_inches="tight",pad_inches=0)
 #plt.savefig('/home/luo/Dropbox/SC2019_Huizhang/AMR2019/figures/fig_'+sys.argv[2]+'.pdf', format='pdf')
 #plt.show()

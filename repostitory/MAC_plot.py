@@ -18,9 +18,10 @@ y4 = data[:,3]
 fig = plt.figure(num=None,figsize=(20,4))
 #fig = plt.figure()
 print np.shape(x)
-axis_font = {'size':'24'}
-plt.rc('xtick', labelsize=24)          # fontsize of the tick labels
-plt.rc('ytick', labelsize=24)
+axis_font = {'size':'32'}
+plt.rc('xtick', labelsize=32)          # fontsize of the tick labels
+plt.rc('ytick', labelsize=32)
+font = {'size':'32'}
 
 N = len(x)
 print N
@@ -28,14 +29,13 @@ ind = np.arange(N)  # the x locations for the groups
 width = 0.2       # the width of the bars
 
 ax = fig.add_subplot(111)
-font = {'size':'24'}
 
 
 
-rects1 = ax.bar(ind-width, y1, width, color='g',label="Z-order")
-rects2 = ax.bar(ind, y2, width, color='r',label="Z-order+zMesh")
-rects3 = ax.bar(ind+width, y3, width, color='b',label="Hilbert")
-rects4 = ax.bar(ind+2*width, y4, width, color='y',label="Hilbert+zMesh")
+rects1 = ax.bar(ind-width, y1, width, color='g',hatch='.',label="Z-order")
+rects2 = ax.bar(ind, y2, width, color='r',hatch='+',label="Z-order+zMesh")
+rects3 = ax.bar(ind+width, y3, width, color='b',hatch='x',label="Hilbert")
+rects4 = ax.bar(ind+2*width, y4, width, color='y',hatch='/',label="Hilbert+zMesh")
 ax.set_ylabel('MAC',font)
 ax.set_ylim([0,150])
 y_major_locator=plt.MultipleLocator(30)
@@ -46,7 +46,7 @@ ax.set_xticks(ind+width)
 ax.set_xticklabels( namelist )
 ax.set_xlim([-0.3,17.8])
 ax.legend(loc="upper right",ncol=2, prop=font)
-
+#plt.tight_layout()
 
 plt.savefig(name_hat+'MAC_Zordering.pdf', format='pdf',bbox_inches="tight",pad_inches=0)
 plt.show()

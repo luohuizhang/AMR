@@ -4,7 +4,7 @@
 #include <time.h>
 #define Refine_ratio 2
 
-#define Level 9
+#define Level 4
 #define Error_ratio 0.0001
 
 
@@ -397,9 +397,7 @@ void mapping_by_box(struct datapoint **data, int cnt [Level],struct box **boxes,
 }
 
 
-
-
-void  get_baseline_encode_recipe(int *encode_recipe, int cnt [Level],struct box **boxes,int box_cnt[Level])
+void  get_baseline_encode_recipe_hilbert(int * encode_recipe, int cnt [Level],struct box **boxes,int box_cnt[Level])
 {
 	clock_t start_t, end_t; double total_t;
 
@@ -418,7 +416,9 @@ void  get_baseline_encode_recipe(int *encode_recipe, int cnt [Level],struct box 
 		{
 			int a=boxes[i][j].y2-boxes[i][j].y1;
 			int b=boxes[i][j].x2-boxes[i][j].x1;
-			int z_size= EncodeMorton2(a,b)+1;
+			int n=1;
+			while(n<=a||n<=b){n=n<<1;}
+			int z_size= n*n;
 			int *z_index=malloc(z_size*sizeof(int));
 			for(k=0;k<z_size;k++){
 				z_index[k]=-1;
@@ -429,7 +429,7 @@ void  get_baseline_encode_recipe(int *encode_recipe, int cnt [Level],struct box 
 			for(int m=0;m<=b;m++)
 				for(int l=0;l<=a;l++)
 				{
-					z_index[EncodeMorton2(l,m)]=l+m*(a+1);
+					z_index[ xy2d(n,l,m)]=l+m*(a+1);
 				}
 			int *recipe_en=malloc(box_size*sizeof(int));
 			int tr=0;
@@ -463,9 +463,7 @@ void  get_baseline_encode_recipe(int *encode_recipe, int cnt [Level],struct box 
 
 
 }
-
-
-void get_levelRe_encode_recipe(struct datapoint **data,int *encode_recipe, int cnt [Level],struct box **boxes,int box_cnt[Level])
+void get_levelRe_encode_recipe_hilbert(struct datapoint **data,int *encode_recipe, int cnt [Level],struct box **boxes,int box_cnt[Level])
 {
 	clock_t start_t, end_t; double total_t;
 	start_t = clock();
@@ -496,9 +494,12 @@ void get_levelRe_encode_recipe(struct datapoint **data,int *encode_recipe, int c
 			recipe_de=malloc(cnt[i]*sizeof(int));
 		for(j=0;j<box_cnt[i];j++)
 		{
+
 			int a=boxes[i][j].y2-boxes[i][j].y1;
 			int b=boxes[i][j].x2-boxes[i][j].x1;
-			int z_size= EncodeMorton2(a,b)+1;
+			int n=1;
+			while(n<=a||n<=b){n=n<<1;}
+			int z_size= n*n;
 			int *z_index=malloc(z_size*sizeof(int));
 			for(k=0;k<z_size;k++){
 				z_index[k]=-1;
@@ -509,7 +510,7 @@ void get_levelRe_encode_recipe(struct datapoint **data,int *encode_recipe, int c
 			for(int m=0;m<=b;m++)
 				for(int l=0;l<=a;l++)
 				{
-					z_index[EncodeMorton2(l,m)]=l+m*(a+1);
+					z_index[ xy2d(n,l,m)]=l+m*(a+1);
 				}
 			int *recipe_en=malloc(box_size*sizeof(int));
 			int tr=0;
@@ -681,16 +682,16 @@ int main(int argc, char **argv)
 	int *   recipe_en_baseline=malloc(datasize*sizeof(int));
 	int *   recipe_en_levelRe=malloc(datasize*sizeof(int));
 
-
 	for(i=0;i<Num_run;i++){
-		get_baseline_encode_recipe(recipe_en_baseline,cnt,boxes,box_cnt);
+		get_baseline_encode_recipe_hilbert(recipe_en_baseline,cnt,boxes,box_cnt);
 	}
 
 
 
 	for(i=0;i<Num_run;i++){
-		get_levelRe_encode_recipe(data,recipe_en_levelRe,cnt,boxes,box_cnt);
+		get_levelRe_encode_recipe_hilbert(data,recipe_en_levelRe,cnt,boxes,box_cnt);
 	}
+
 
 
 

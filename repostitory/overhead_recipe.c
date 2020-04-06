@@ -524,7 +524,7 @@ void  get_baseline_encode_recipe_hilbert(int * encode_recipe, int cnt [Level],st
 			int a=boxes[i][j].y2-boxes[i][j].y1;
 			int b=boxes[i][j].x2-boxes[i][j].x1;
 			int n=1;
-			while(n<a||n<b){n=n<<1;}
+			while(n<=a||n<=b){n=n<<1;}
 			int z_size= n*n;
 			int *z_index=malloc(z_size*sizeof(int));
 			for(k=0;k<z_size;k++){
@@ -1021,9 +1021,9 @@ int main(int argc, char **argv)
 	for(i=0;i<Level;i++)
 	{
 		read_cnt=fread(&cnt[i],sizeof(int),1,fp);
-		printf("data count= %d\n", cnt[i]);
+//		printf("data count= %d\n", cnt[i]);
 		read_cnt=fread(&box_cnt[i],sizeof(int),1,fp);
-		printf("box_cnt= %d\n", box_cnt[i]);
+//		printf("box_cnt= %d\n", box_cnt[i]);
 		boxes[i]=malloc(box_cnt[i]*sizeof(struct box));
 		read_cnt=fread(boxes[i],sizeof(struct box),box_cnt[i],fp);
 		data[i]=malloc(cnt[i]*sizeof(struct datapoint));

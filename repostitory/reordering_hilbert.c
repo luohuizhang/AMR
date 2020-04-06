@@ -423,7 +423,7 @@ void leveldata_box_hilbert(struct datapoint **data, int cnt [Level],struct box *
 			int a=boxes[i][j].y2-boxes[i][j].y1;
 			int b=boxes[i][j].x2-boxes[i][j].x1;
                         int n=1;
-                        while(n<b||n<a) n=n<<1;
+                        while(n<=b||n<=a) n=n<<1;
 			int z_size= n*n;
 			//printf("%d,%d,%d\n",a,b,z_size);
 			int *z_index=malloc(z_size*sizeof(int));
@@ -541,7 +541,7 @@ void leveldata_box_hilbert_level(struct datapoint **data, int cnt [Level],struct
 			int a=boxes[i][j].y2-boxes[i][j].y1;
 			int b=boxes[i][j].x2-boxes[i][j].x1;
                         int n=1;
-                        while(n<b||n<a) n=n<<1;
+                        while(n<=b||n<=a) n=n<<1;
 			int z_size= n*n;
 			int *z_index=malloc(z_size*sizeof(int));
 			//memset (z_index,-1,z_size*sizeof(int));

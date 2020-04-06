@@ -34,8 +34,8 @@ ind = np.arange(N)  # the x locations for the groups
 width = 0.2       # the width of the bars
 
 ax = fig.add_subplot(111)
-ax.plot(x,z1,"g-o",linewidth=1,label="Z")
-ax.plot(x,z2,"r-^",linewidth=1,label="Z+LevelRe")
+ax.plot(x,z1,"g-o",linewidth=1,label="Z-order")
+ax.plot(x,z2,"r-^",linewidth=1,label="Z-order+zMesh")
 #ax.plot(x,z3,"b--",linewidth=1,label="H")
 #ax.plot(x,z4,"y--",linewidth=1,label="H+LevelRe")
 #rects1 = ax.bar(ind, z2, width, color='r',label="Z+LevelRe")
@@ -68,8 +68,8 @@ width = 0.2       # the width of the bars
 ax = fig.add_subplot(111)
 #ax.plot(x,z1,"g-o",linewidth=1,label="Z")
 #ax.plot(x,z2,"r-^",linewidth=1,label="Z+LevelRe")
-ax.plot(x,z3,"b-o",linewidth=1,label="H")
-ax.plot(x,z4,"y-^",linewidth=1,label="H+LevelRe")
+ax.plot(x,z3,"b-o",linewidth=1,label="Hilbert")
+ax.plot(x,z4,"y-^",linewidth=1,label="Hilbert+zMesh")
 #ax.set_yscale('log')
 ax.set_ylabel('Total distance',axis_font)
 y_major_locator=plt.MultipleLocator(5000)

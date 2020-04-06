@@ -55,7 +55,7 @@ plt.xlabel('Data point ID', **axis_font)
 plt.ylabel('Data value',**axis_font )
 #plt.ylabel('Data frequency',**axis_font )
 title_name="MAC="+str(mad).split('.')[0] + '.' + str(mad).split('.')[1][:2]
-plt.title(title_name, **axis_font)
+plt.title(title_name, fontsize=16)
 #n, bins, patches=plt.hist(vals,bins=100,normed=True,histtype='bar', label='pdf', color='black')
 #n, bins, patches=plt.hist(vals,bins=1000,normed=True,histtype='step', cumulative=True, label='cdf',color='black')
 

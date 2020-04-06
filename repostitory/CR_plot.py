@@ -22,9 +22,10 @@ y8= data[:,7]
 fig = plt.figure(num=None,figsize=(20,4))
 #fig = plt.figure()
 print np.shape(x)
-axis_font = {'size':'24'}
-plt.rc('xtick', labelsize=24)          # fontsize of the tick labels
-plt.rc('ytick', labelsize=24)
+axis_font = {'size':'32'}
+plt.rc('xtick', labelsize=32)          # fontsize of the tick labels
+plt.rc('ytick', labelsize=32)
+font = {'size':'32'}
 
 N = len(x)
 print N
@@ -32,21 +33,21 @@ ind = np.arange(N)  # the x locations for the groups
 width = 0.2       # the width of the bars
 
 ax = fig.add_subplot(111)
-font = {'size':'24'}
 
 
 
-rects1 = ax.bar(ind-width, y1, width, color='g',label="Z-order")
-rects2 = ax.bar(ind, y2, width, color='r',label="Z-order+zMesh")
-rects3 = ax.bar(ind+width, y3, width, color='b',label="Hilbert")
-rects4 = ax.bar(ind+2*width, y4, width, color='y',label="Hilbert+zMesh")
+rects1 = ax.bar(ind-width, y1, width, color='g',hatch='.',label="Z-order")
+rects2 = ax.bar(ind, y2, width, color='r',hatch='+',label="Z-order+zMesh")
+rects3 = ax.bar(ind+width, y3, width, color='b',hatch='x',label="Hilbert")
+rects4 = ax.bar(ind+2*width, y4, width, color='y',hatch='/',label="Hilbert+zMesh")
 ax.set_ylabel('Compression ratio',font)
 #ax.set_title("ZFP",axis_font)
 ax.set_xticks(ind+width)
 ax.set_xticklabels( namelist )
 ax.set_xlim([-0.3,17.8])
 ax.legend(loc=2,ncol=2, prop=font)
-
+ax.set_xlabel("(a) ZFP",{'family' : 'Times New Roman', 'size'   : 36})
+#plt.tight_layout()
 
 plt.savefig(name_hat+'CR_ZFP_Zordering.pdf', format='pdf',bbox_inches="tight",pad_inches=0)
 plt.show()
@@ -55,27 +56,24 @@ plt.show()
 fig = plt.figure(num=None,figsize=(20,4))
 #fig = plt.figure()
 print np.shape(x)
-axis_font = {'size':'24'}
-plt.rc('xtick', labelsize=24)          # fontsize of the tick labels
-plt.rc('ytick', labelsize=24)
 ax = fig.add_subplot(111)
-font = {'size':'24'}
 
 
 
-rects1 = ax.bar(ind-width, y5, width, color='g',label="Z-order")
-rects2 = ax.bar(ind, y6, width, color='r',label="Z-order+zMesh")
-rects3 = ax.bar(ind+width, y7, width, color='b',label="Hilbert")
-rects4 = ax.bar(ind+2*width, y8, width, color='y',label="Hilbert+zMesh")
+rects1 = ax.bar(ind-width, y5, width, color='g',hatch='.',label="Z-order")
+rects2 = ax.bar(ind, y6, width, color='r',hatch='+',label="Z-order+zMesh")
+rects3 = ax.bar(ind+width, y7, width, color='b',hatch='x',label="Hilbert")
+rects4 = ax.bar(ind+2*width, y8, width, color='y',hatch='/',label="Hilbert+zMesh")
 ax.set_ylabel('Compression ratio',font)
 y_major_locator=plt.MultipleLocator(100)
 ax.yaxis.set_major_locator(y_major_locator)
-#ax.set_title("ZFP",axis_font)
+#ax.set_title("SZ",axis_font)
 ax.set_xticks(ind+width)
 ax.set_xticklabels( namelist )
 ax.set_xlim([-0.3,17.8])
-ax.legend(loc=2,ncol=2, prop=font)
-
+#ax.legend(loc=2,ncol=2, prop=font)
+ax.set_xlabel("(b) SZ",{'family' : 'Times New Roman', 'size'   : 36})
+#plt.tight_layout()
 
 plt.savefig(name_hat+'CR_SZ_Zordering.pdf', format='pdf',bbox_inches="tight",pad_inches=0)
 plt.show()

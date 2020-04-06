@@ -524,7 +524,7 @@ void  get_baseline_encode_recipe_hilbert(int * encode_recipe, int cnt [Level],st
 			int a=boxes[i][j].y2-boxes[i][j].y1;
 			int b=boxes[i][j].x2-boxes[i][j].x1;
 			int n=1;
-			while(n<a||n<b){n=n<<1;}
+			while(n<=a||n<=b){n=n<<1;}
 			int z_size= n*n;
 			int *z_index=malloc(z_size*sizeof(int));
 			for(k=0;k<z_size;k++){

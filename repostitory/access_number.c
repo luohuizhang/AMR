@@ -64,6 +64,29 @@ int DecodeMorton2Y(int code)
 }
 
 
+void rot(int n, int *x, int *y, int rx, int ry) {
+	if (ry == 0) {
+		if (rx == 1) {
+			*x = n-1 - *x;
+			*y = n-1 - *y;
+		}
+
+		//Swap x and y
+		int t  = *x;
+		*x = *y;
+		*y = t;
+	}
+}
+int xy2d (int n, int x, int y) {
+	int rx, ry, s, d=0;
+	for (s=n/2; s>0; s/=2) {
+		rx = (x & s) > 0;
+		ry = (y & s) > 0;
+		d += s * s * ((3 * rx) ^ ry);
+		rot(n, &x, &y, rx, ry);
+	}
+	return d;
+}
 
 struct datapoint{
 	int a,b;
@@ -345,6 +368,251 @@ void mapping_by_box(struct datapoint **data, int cnt [Level],struct box **boxes,
 
 }
 
+struct node_storage * leveldata_box_hilbert(struct datapoint **data, int cnt [Level],struct box **boxes,int box_cnt[Level])
+{
+	clock_t start_t, end_t; double total_t;
+
+	start_t = clock();
+	clock_t start_t1=start_t;
+	int i,j,k;
+
+	struct node** trees;
+	trees=malloc(Level*sizeof(* trees));
+	for(i=0;i<Level;i++)
+		trees[i]=malloc(cnt[i]*sizeof(struct node));
+	int datasize=0;
+	for(i=0;i<Level;i++)
+		datasize=datasize+cnt[i];
+	struct node_storage*dataArray=malloc(datasize*sizeof(struct node_storage));
+	int offset=0;
+
+	for(i=0;i<Level;i++)
+	{ 
+		offset=0;
+		for(j=0;j<box_cnt[i];j++)
+		{
+			int a=boxes[i][j].y2-boxes[i][j].y1;
+			int b=boxes[i][j].x2-boxes[i][j].x1;
+			int n=1;
+			while(n<=a||n<=b){n=n<<1;}
+			int z_size= n*n;
+			int *z_index=malloc(z_size*sizeof(int));
+			for(k=0;k<z_size;k++){
+				z_index[k]=-1;
+			}
+
+			int box_size=(a+1)*(b+1);
+
+			for(int m=0;m<=b;m++)
+				for(int l=0;l<=a;l++)
+				{
+					z_index[ xy2d(n,l,m)]=l+m*(a+1);
+				}
+			int *recipe_en=malloc(box_size*sizeof(int));
+			int tr=0;
+			for(k=0;k<z_size;k++){
+				if(z_index[k]!=-1)
+					recipe_en[tr++]=z_index[k];
+			}
+			if(tr!=box_size){
+				printf("tr!=box_size, %d, %d\n",tr,box_size);
+				for (k=0;k<box_size;k++)
+					printf("%d ",recipe_en[k]);
+			}
+			for(k=0;k<box_size;k++)
+			{
+				trees[i][offset+k].x=data[i][offset+recipe_en[k]].a;
+				trees[i][offset+k].y=data[i][offset+recipe_en[k]].b;
+				trees[i][offset+k].val=data[i][offset+recipe_en[k]].val;
+				trees[i][offset+k].flag=0;
+				trees[i][offset+k].fchild=NULL;
+				trees[i][offset+k].next=NULL;
+				trees[i][offset+k].lvl=i;
+			}
+
+			offset+=box_size;
+			free(z_index);
+			free(recipe_en);
+		}
+
+	}
+	int offset1=0;
+	for(i=0;i<Level;i++)
+		for(j=0;j<cnt[i];j++)
+		{
+			dataArray[offset1].val=trees[i][j].val;
+			dataArray[offset1].x=trees[i][j].x;
+			dataArray[offset1].y=trees[i][j].y;
+			dataArray[offset1].lvl=i;
+			trees[i][j].flag=1;
+			offset1++;
+		}
+
+	for(i=0;i<Level;i++)
+		for(j=0;j<cnt[i];j++)
+		{
+			if(trees[i][j].flag==0)                 
+				printf("Not visit %d,%d\n",i,j);
+
+		}
+
+
+	for(i=0;i<Level;i++)
+		free(trees[i]);
+	free(trees);
+	//	free(dataArray);
+	return dataArray;
+}
+
+
+
+struct node_storage* leveldata_box_level_hilbert(struct datapoint **data, int cnt [Level],struct box **boxes,int box_cnt[Level])
+{
+	mapping_by_box(data,cnt,boxes,box_cnt);
+	clock_t start_t, end_t; double total_t;
+	double total_t1=0;
+	clock_t start_t1;
+	start_t = clock();
+	start_t1=start_t;
+	int i,j,k;
+	FILE *fp;
+	struct node** trees;
+	trees=malloc(Level*sizeof(* trees));
+	for(i=0;i<Level;i++)
+		trees[i]=malloc(cnt[i]*sizeof(struct node));
+	int datasize=0;
+	for(i=0;i<Level;i++)
+		datasize=datasize+cnt[i];
+	struct node_storage*dataArray=malloc(datasize*sizeof(struct node_storage));
+
+	int offset=0;
+
+	int *recipe_de;
+	for(i=0;i<Level;i++)
+	{ 
+		if(i<Level-1)
+			recipe_de=malloc(cnt[i]*sizeof(int));
+		offset=0;
+		for(j=0;j<box_cnt[i];j++)
+		{
+			int a=boxes[i][j].y2-boxes[i][j].y1;
+			int b=boxes[i][j].x2-boxes[i][j].x1;
+			int n=1;
+			while(n<=a||n<=b){n=n<<1;}
+			int z_size= n*n;
+			int *z_index=malloc(z_size*sizeof(int));
+			for(k=0;k<z_size;k++){
+				z_index[k]=-1;
+			}
+
+			int box_size=(a+1)*(b+1);
+
+			for(int m=0;m<=b;m++)
+				for(int l=0;l<=a;l++)
+				{
+					z_index[ xy2d(n,l,m)]=l+m*(a+1);
+				}
+			int *recipe_en=malloc(box_size*sizeof(int));
+			int tr=0;
+			for(k=0;k<z_size;k++){
+				if(z_index[k]!=-1)
+					recipe_en[tr++]=z_index[k];
+			}
+			if(tr!=box_size){
+				printf("tr!=box_size, %d, %d\n",tr,box_size);
+				for (k=0;k<box_size;k++)
+					printf("%d ",recipe_en[k]);
+			}
+			for(k=0;k<box_size;k++)
+			{
+				trees[i][offset+k].x=data[i][offset+recipe_en[k]].a;
+				trees[i][offset+k].y=data[i][offset+recipe_en[k]].b;
+				trees[i][offset+k].val=data[i][offset+recipe_en[k]].val;
+				trees[i][offset+k].index=offset+recipe_en[k];
+				trees[i][offset+k].flag=0;
+				trees[i][offset+k].fchild=NULL;
+				trees[i][offset+k].next=NULL;
+				trees[i][offset+k].lvl=i;
+			}
+
+			if(i<Level-1){
+				size_t *size_t_index_tmp_buffer = (size_t *) malloc (box_size * sizeof (size_t));
+				gsl_sort_int_index (size_t_index_tmp_buffer,  recipe_en, 1,box_size );
+
+				for(int j1=0;j1<box_size;j1++){
+					recipe_de[j1+offset]=size_t_index_tmp_buffer[j1]+offset;
+				}
+				free(size_t_index_tmp_buffer);
+			}
+
+			offset+=box_size;
+			free(z_index);
+			free(recipe_en);
+		}
+
+		if(i<Level-1)
+		{
+			for(j=0;j<cnt[i+1];j++){
+				mapping[i+1][j]=recipe_de[mapping[i+1][j]];
+			}
+
+			free(recipe_de);
+
+		}
+	}
+
+
+	start_t=clock();
+
+	start_t1=start_t;
+
+	for(i=Level-1;i>0;i--)
+	{
+		for(j=0;j<cnt[i];j++)
+		{       
+			int father_index=mapping[i][trees[i][j].index];
+			struct	node *p=trees[i-1][father_index].fchild;
+			if (p==NULL)
+				trees[i-1][father_index].fchild=&trees[i][j];
+			else
+			{
+				while(p->next!=NULL)
+					p=p->next;
+				p->next=&trees[i][j];
+			}
+
+
+
+
+		}
+
+
+	}
+	fp_glob=dataArray;
+	for(i=0;i<1;i++)
+		for(j=0;j<cnt[i];j++)
+		{
+			struct  node *p=&trees[i][j];
+			PrintTree(p);
+
+		}
+
+	//printf("vp:%ld,%ld\n",dataArray,fp_glob-dataArray);
+	for(i=0;i<Level;i++)
+		for(j=0;j<cnt[i];j++)
+		{
+			if(trees[i][j].flag==0)                      
+				printf("Not visit %d,%d\n",i,j);
+
+		}
+	for(i=0;i<Level;i++)
+		free(trees[i]);
+	free(trees);
+
+	//free(dataArray);
+	return dataArray;
+
+}
 struct node_storage * leveldata_box(struct datapoint **data, int cnt [Level],struct box **boxes,int box_cnt[Level])
 {
 	clock_t start_t, end_t; double total_t;
@@ -445,6 +713,7 @@ struct node_storage * leveldata_box(struct datapoint **data, int cnt [Level],str
 
 struct node_storage* leveldata_box_level(struct datapoint **data, int cnt [Level],struct box **boxes,int box_cnt[Level])
 {
+	mapping_by_box(data,cnt,boxes,box_cnt);
 	clock_t start_t, end_t; double total_t;
 	double total_t1=0;
 	clock_t start_t1;
@@ -688,7 +957,7 @@ int main()
 
 
 	FILE *fp=fopen("datapoint_0","r");
-//		FILE *fp=fopen("datapoint_noghost.info","r");
+	//		FILE *fp=fopen("datapoint_noghost.info","r");
 	for(i=0;i<Level;i++)
 	{
 		fread(&cnt[i],sizeof(int),1,fp);
@@ -711,19 +980,24 @@ int main()
 	box_mapping=malloc(Level*sizeof(* box_mapping));
 	for(i=0;i<Level;i++)
 		box_mapping[i]=malloc(box_cnt[i]*sizeof(struct parent_box));
-	mapping_by_box(data,cnt,boxes,box_cnt);
 
 	struct node_storage* s_data;
 	struct node_storage* s_data1;
+	struct node_storage* s_data_h;
+	struct node_storage* s_data_h1;
 	s_data=leveldata_box(data,cnt,boxes,box_cnt);
 	s_data1=leveldata_box_level(data,cnt,boxes,box_cnt);
 
+	s_data_h=leveldata_box_hilbert(data,cnt,boxes,box_cnt);
+	s_data_h1=leveldata_box_level_hilbert(data,cnt,boxes,box_cnt);
 
-		struct box inq;
+	struct box inq;
 
 	double num_run1=0;
 	double num_run2=0;
-//for(i=0;i<Level;i++)
+	double num_run_h1=0;
+	double num_run_h2=0;
+	//for(i=0;i<Level;i++)
 	for(i=0;i<1;i++)
 		for(j=0;j<box_cnt[i];j++){
 			inq=boxes[i][j];
@@ -735,18 +1009,27 @@ int main()
 			flag_block_init(s_data,cnt);       
 			pattern_box(s_data,cnt,&inq);
 			num_run1+=	flag_block_c(s_data,cnt);
-			flag_block_init(s_data,cnt);       
 
 			flag_block_init(s_data1,cnt);
 			pattern_box(s_data1,cnt,&inq);
 			num_run2+= flag_block_c(s_data1,cnt);
-			flag_block_init(s_data1,cnt);
-		}
-	printf("Number of run %lf, %lf, %f\n",num_run1/box_cnt[0],num_run2/box_cnt[0], (double)(num_run1-num_run2)/(double)num_run1);
 
+			flag_block_init(s_data_h,cnt);       
+			pattern_box(s_data_h,cnt,&inq);
+			num_run_h1+=	flag_block_c(s_data_h,cnt);
+
+			flag_block_init(s_data_h1,cnt);
+			pattern_box(s_data_h1,cnt,&inq);
+			num_run_h2+= flag_block_c(s_data_h1,cnt);
+		}
+	printf("Number of run, Z: %lf, %lf, %f\n",num_run1/box_cnt[0],num_run2/box_cnt[0], (double)(num_run1-num_run2)/(double)num_run1);
+
+	printf("Number of run, H: %lf, %lf, %f\n",num_run_h1/box_cnt[0],num_run_h2/box_cnt[0], (double)(num_run_h1-num_run_h2)/(double)num_run_h1);
 	free(s_data);
 	free(s_data1);
 
+	free(s_data_h);
+	free(s_data_h1);
 
 	for(i=0;i<Level;i++)	
 		free(data[i]);
@@ -757,9 +1040,9 @@ int main()
 	for(i=0;i<Level;i++)
 		free(mapping[i]);
 	free(mapping);
-        for(i=0;i<Level;i++)
-                free(box_mapping[i]);
-        free(box_mapping);
+	for(i=0;i<Level;i++)
+		free(box_mapping[i]);
+	free(box_mapping);
 
 	return 1;
 }

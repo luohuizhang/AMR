@@ -1,6 +1,6 @@
 rm ../repostitory/CR_EB_ZFP.txt
 rm ../repostitory/CR_EB_SZ.txt
-declare -i n=5
+declare -i n=-1
 # Index of output file
 declare -i j
 
@@ -13,7 +13,7 @@ maxV=`python ../repostitory/findmax.py Level_box_zordering_0.dat`
 
 maxV=$( echo $maxV | awk '{printf("%.15f\n", $1)}')
 # Main loop for batch execution
-for ((j=-6;j<-1;j=$j+1))
+for ((j=-5;j<$n;j=$j+1))
 
 do
 
@@ -76,7 +76,7 @@ maxV=`python ../repostitory/findmax.py Level_box_zordering_0.dat`
 
 maxV=$( echo $maxV | awk '{printf("%.15f\n", $1)}')
 # Main loop for batch execution
-for ((j=-6;j<-1;j=$j+1))
+for ((j=-5;j<$n;j=$j+1))
 
 do
 
@@ -139,7 +139,7 @@ maxV=`python ../repostitory/findmax.py Level_box_zordering_0.dat`
 
 maxV=$( echo $maxV | awk '{printf("%.15f\n", $1)}')
 # Main loop for batch execution
-for ((j=-6;j<-1;j=$j+1))
+for ((j=-5;j<$n;j=$j+1))
 
 do
 
