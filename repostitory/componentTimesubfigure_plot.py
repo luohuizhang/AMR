@@ -45,7 +45,7 @@ ax.set_xticklabels( namelist )
 ax.set_xlim([-0.3,2.7])
 #ax.legend(ncol=1, prop=font,bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0)
 #ax.set_title("Reorder recipe",axis_font)
-ax.set_xlabel("(a) Reorder recipe",{'family' : 'Times New Roman', 'size'   : 36})
+ax.set_xlabel("(a) Data reorder",{'family' : 'Times New Roman', 'size'   : 36})
 
 ax = fig.add_subplot(162)
 rects1 = ax.bar(ind-width, CPN[2,:], width, color='g',hatch='.',label="Z-order" )
@@ -63,7 +63,7 @@ ax.set_xlim([-0.3,2.7])
 #ax.legend(loc=2,ncol=2, prop=font)
 #ax.set_title("Restore recipe",axis_font)
 
-ax.set_xlabel("(b) Restore recipe",{'family' : 'Times New Roman', 'size'   : 36})
+ax.set_xlabel("(b) Data restoration",{'family' : 'Times New Roman', 'size'   : 36})
 
 ax = fig.add_subplot(163)
 

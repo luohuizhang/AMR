@@ -452,22 +452,21 @@ void leveldata_box_hilbert(struct datapoint **data, int cnt [Level],struct box *
 		offset=0;
 		for(j=0;j<box_cnt[i];j++)
 		{
-			int b=boxes[i][j].y2-boxes[i][j].y1;
-			int a=boxes[i][j].x2-boxes[i][j].x1;
+			int side=boxes[i][j].x2-boxes[i][j].x1;
 			int n=1;
-			while(n<a+1||n<b+1){n=n<<1;}
+			while(n<side+1){n=n<<1;}
 			int z_size= n*n;
 			int *z_index=malloc(z_size*sizeof(int));
 			for(k=0;k<z_size;k++){
 				z_index[k]=-1;
 			}
 
-			int box_size=(a+1)*(b+1);
+			int box_size=(side+1)*(side+1);
 
-			for(int m=0;m<=b;m++)
-				for(int l=0;l<=a;l++)
+			for(int m=0;m<=side;m++)
+				for(int l=0;l<=side;l++)
 				{
-					z_index[ xy2d(n,l,m)]=l+m*(a+1);
+					z_index[ xy2d(n,l,m)]=l+m*(side+1);
 				}
 			int *recipe_en=malloc(box_size*sizeof(int));
 			int tr=0;
@@ -577,22 +576,21 @@ void leveldata_box_hilbert_level(struct datapoint **data, int cnt [Level],struct
 			recipe_de=malloc(cnt[i]*sizeof(int));
 		for(j=0;j<box_cnt[i];j++)
 		{
-			int b=boxes[i][j].y2-boxes[i][j].y1;
-			int a=boxes[i][j].x2-boxes[i][j].x1;
+			int side=boxes[i][j].x2-boxes[i][j].x1;
 			int n=1;
-			while(n<a+1||n<b+1){n=n<<1;}
+			while(n<side+1){n=n<<1;}
 			int z_size= n*n;
 			int *z_index=malloc(z_size*sizeof(int));
 			for(k=0;k<z_size;k++){
 				z_index[k]=-1;
 			}
 
-			int box_size=(a+1)*(b+1);
+			int box_size=(side+1)*(side+1);
 
-			for(int m=0;m<=b;m++)
-				for(int l=0;l<=a;l++)
+			for(int m=0;m<=side;m++)
+				for(int l=0;l<=side;l++)
 				{
-					z_index[ xy2d(n,l,m)]=l+m*(a+1);
+					z_index[ xy2d(n,l,m)]=l+m*(side+1);
 				}
 			int *recipe_en=malloc(box_size*sizeof(int));
 			int tr=0;
@@ -764,21 +762,20 @@ void leveldata_box_zordering(struct datapoint **data, int cnt [Level],struct box
 		offset=0;
 		for(j=0;j<box_cnt[i];j++)
 		{
-			int a=boxes[i][j].x2-boxes[i][j].x1;
-			int b=boxes[i][j].y2-boxes[i][j].y1;
-			int z_size= EncodeMorton2(a,b)+1;
+			int side=boxes[i][j].x2-boxes[i][j].x1;
+			int z_size= EncodeMorton2(side,side)+1;
 			int *z_index=malloc(z_size*sizeof(int));
 			//memset (z_index,-1,z_size*sizeof(int));
 			for(k=0;k<z_size;k++){
 				z_index[k]=-1;
 			}
 
-			int box_size=(a+1)*(b+1);
+			int box_size=(side+1)*(side+1);
 
-			for(int m=0;m<=b;m++)
-				for(int l=0;l<=a;l++)
+			for(int m=0;m<=side;m++)
+				for(int l=0;l<=side;l++)
 				{
-					z_index[EncodeMorton2(l,m)]=l+m*(a+1);
+					z_index[EncodeMorton2(l,m)]=l+m*(side+1);
 				}
 			int *recipe_en=malloc(box_size*sizeof(int));
 			int tr=0;
@@ -886,9 +883,8 @@ void leveldata_box_zordering_level(struct datapoint **data, int cnt [Level],stru
 			recipe_de=malloc(cnt[i]*sizeof(int));
 		for(j=0;j<box_cnt[i];j++)
 		{
-			int a=boxes[i][j].x2-boxes[i][j].x1;
-			int b=boxes[i][j].y2-boxes[i][j].y1;
-			int z_size= EncodeMorton2(a,b)+1;
+			int side=boxes[i][j].x2-boxes[i][j].x1;
+			int z_size= EncodeMorton2(side,side)+1;
 			//printf("%d,%d,%d\n",a,b,z_size);
 			int *z_index=malloc(z_size*sizeof(int));
 			//memset (z_index,-1,z_size*sizeof(int));
@@ -896,12 +892,12 @@ void leveldata_box_zordering_level(struct datapoint **data, int cnt [Level],stru
 				z_index[k]=-1;
 			}
 
-			int box_size=(a+1)*(b+1);
+			int box_size=(side+1)*(side+1);
 
-			for(int m=0;m<=b;m++)
-				for(int l=0;l<=a;l++)
+			for(int m=0;m<=side;m++)
+				for(int l=0;l<=side;l++)
 				{
-					z_index[EncodeMorton2(l,m)]=l+m*(a+1);
+					z_index[EncodeMorton2(l,m)]=l+m*(side+1);
 				}
 			int *recipe_en=malloc(box_size*sizeof(int));
 			int tr=0;

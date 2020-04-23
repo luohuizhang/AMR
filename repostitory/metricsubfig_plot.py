@@ -57,21 +57,24 @@ ax.set_xlabel("(a) ZeroCnt",{'family' : 'Times New Roman', 'size'   : 36})
 
 
 ax = fig.add_subplot(152)
-rects1 = ax.bar(ind-width, ZFP[2,:], width, color='g',hatch='.',label="Z-order" )
-rects2 = ax.bar(ind, ZFP[3,:], width, color='r',hatch='+',label="Z-order+zMesh")
-rects3 = ax.bar(ind+width, ZFP[12,:], width, color='blue',hatch='x',label="Hilbert" )
-rects4 = ax.bar(ind+2*width,ZFP[13,:], width, color='y',hatch='/',label="Hilbert+zMesh")
+
+rects1 = ax.bar(ind-width, ZFP[6,:], width, color='g',hatch='.',label="Z-order" )
+rects2 = ax.bar(ind, ZFP[7,:], width, color='r',hatch='+',label="Z-order+zMesh")
+rects3 = ax.bar(ind+width, ZFP[16,:], width, color='blue',hatch='x',label="Hilbert" )
+rects4 = ax.bar(ind+2*width,ZFP[17,:], width, color='y',hatch='/',label="Hilbert+zMesh")
 
 #ax.set_ylabel('Average value',axis_font)
-y_major_locator=plt.MultipleLocator(10)
-ax.yaxis.set_major_locator(y_major_locator)
+#ax.set_yscale('log')
+#y_major_locator=plt.MultipleLocator(200)
+#ax.yaxis.set_major_locator(y_major_locator)
 ax.set_xticks(ind+width)
 ax.set_xticklabels( namelist )
 #ax.set_ylim([0,900])
 ax.set_xlim([-0.3,2.7])
 #ax.legend(loc=2,ncol=2, prop=font)
-#ax.set_title("BitsPerBitplane",axis_font)
-ax.set_xlabel("(b) BitsPerBitplane",{'family' : 'Times New Roman', 'size'   : 36})
+#ax.set_title("MaxExp",axis_font)
+
+ax.set_xlabel("(b) MaxExp",{'family' : 'Times New Roman', 'size'   : 36})
 
 ax = fig.add_subplot(153)
 
@@ -92,26 +95,23 @@ ax.set_xlim([-0.3,2.7])
 #ax.set_title("MaxPrec",axis_font)
 ax.set_xlabel("(c) MaxPrec",{'family' : 'Times New Roman', 'size'   : 36})
 
-ax = fig.add_subplot(154)
 
-rects1 = ax.bar(ind-width, ZFP[6,:], width, color='g',hatch='.',label="Z-order" )
-rects2 = ax.bar(ind, ZFP[7,:], width, color='r',hatch='+',label="Z-order+zMesh")
-rects3 = ax.bar(ind+width, ZFP[16,:], width, color='blue',hatch='x',label="Hilbert" )
-rects4 = ax.bar(ind+2*width,ZFP[17,:], width, color='y',hatch='/',label="Hilbert+zMesh")
+ax = fig.add_subplot(154)
+rects1 = ax.bar(ind-width, ZFP[2,:], width, color='g',hatch='.',label="Z-order" )
+rects2 = ax.bar(ind, ZFP[3,:], width, color='r',hatch='+',label="Z-order+zMesh")
+rects3 = ax.bar(ind+width, ZFP[12,:], width, color='blue',hatch='x',label="Hilbert" )
+rects4 = ax.bar(ind+2*width,ZFP[13,:], width, color='y',hatch='/',label="Hilbert+zMesh")
 
 #ax.set_ylabel('Average value',axis_font)
-#ax.set_yscale('log')
-#y_major_locator=plt.MultipleLocator(200)
-#ax.yaxis.set_major_locator(y_major_locator)
+y_major_locator=plt.MultipleLocator(10)
+ax.yaxis.set_major_locator(y_major_locator)
 ax.set_xticks(ind+width)
 ax.set_xticklabels( namelist )
 #ax.set_ylim([0,900])
 ax.set_xlim([-0.3,2.7])
 #ax.legend(loc=2,ncol=2, prop=font)
-#ax.set_title("MaxExp",axis_font)
-
-ax.set_xlabel("(d) MaxExp",{'family' : 'Times New Roman', 'size'   : 36})
-
+#ax.set_title("BitsPerBitplane",axis_font)
+ax.set_xlabel("(d) BitsBitplane",{'family' : 'Times New Roman', 'size'   : 36})
 
 ax = fig.add_subplot(155)
 

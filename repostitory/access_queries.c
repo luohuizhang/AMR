@@ -391,8 +391,8 @@ struct node_storage * leveldata_box_hilbert(struct datapoint **data, int cnt [Le
 		offset=0;
 		for(j=0;j<box_cnt[i];j++)
 		{
-			int b=boxes[i][j].y2-boxes[i][j].y1;
-			int a=boxes[i][j].x2-boxes[i][j].x1;
+			int a=boxes[i][j].y2-boxes[i][j].y1;
+			int b=boxes[i][j].x2-boxes[i][j].x1;
 			int n=1;
 			while(n<=a||n<=b){n=n<<1;}
 			int z_size= n*n;
@@ -496,8 +496,8 @@ struct node_storage* leveldata_box_level_hilbert(struct datapoint **data, int cn
 		offset=0;
 		for(j=0;j<box_cnt[i];j++)
 		{
-			int b=boxes[i][j].y2-boxes[i][j].y1;
-			int a=boxes[i][j].x2-boxes[i][j].x1;
+			int a=boxes[i][j].y2-boxes[i][j].y1;
+			int b=boxes[i][j].x2-boxes[i][j].x1;
 			int n=1;
 			while(n<=a||n<=b){n=n<<1;}
 			int z_size= n*n;
@@ -1123,10 +1123,11 @@ int main()
 	printf("row:\n");
 	fp=fopen("row_pattern1.txt","w");
 	for(i=0;i<box_cnt[Level-1];i++){
-		inq.y1=(boxes[Level-1][i].y1+boxes[Level-1][i].y2)/2;
-		inq.y2=inq.y1;
 		inq.x1=boxes[Level-1][i].x1;
 		inq.x2=boxes[Level-1][i].x2;
+                for(j=boxes[Level-1][i].y1;j<=boxes[Level-1][i].y2;j=j+10){
+		inq.y1=j;
+		inq.y2=j;
 
 		flag_block_init(s_data,cnt);
 		double query_size= pattern_box_s(s_data,cnt,&inq,Level-1);
@@ -1137,6 +1138,7 @@ int main()
 		double fetch_size1=flag_block_c(s_data1,cnt);
 		fprintf(fp,"%lf %lf\n",query_size/fetch_size,query_size/fetch_size1);
 	}
+}
 	fclose(fp);
 
 
@@ -1246,10 +1248,11 @@ int main()
 	printf("row:\n");
 	fp=fopen("row_pattern_h1.txt","w");
 	for(i=0;i<box_cnt[Level-1];i++){
-		inq.y1=(boxes[Level-1][i].y1+boxes[Level-1][i].y2)/2;
-		inq.y2=inq.y1;
 		inq.x1=boxes[Level-1][i].x1;
 		inq.x2=boxes[Level-1][i].x2;
+                for(j=boxes[Level-1][i].y1;j<=boxes[Level-1][i].y2;j=j+10){
+		inq.y1=j;
+		inq.y2=j;
 
 		flag_block_init(s_data_h,cnt);
 		double query_size= pattern_box_s(s_data_h,cnt,&inq,Level-1);
@@ -1260,6 +1263,7 @@ int main()
 		double fetch_size1=flag_block_c(s_data_h1,cnt);
 		fprintf(fp,"%lf %lf\n",query_size/fetch_size,query_size/fetch_size1);
 	}
+}
 	fclose(fp);
 
 
