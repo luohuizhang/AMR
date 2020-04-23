@@ -7,13 +7,8 @@ LD = -lm
 
 .SUFFIXES : .o .c
 
-all: overhead_reordering overhead_level overhead_level_H reordering access_number access_queries  distance overhead_all overhead_recipe overhead_recipe_H reordering_hilbert reordering_gilbert 2Dcompression 
+all:  overhead_level overhead_level_H reordering access_number access_queries  distance overhead_all overhead_recipe overhead_recipe_H reordering_hilbert reordering_gilbert 2Dcompression 
 
-overhead_reordering : overhead_reordering.o
-	$(CC) $(LD) -o $@ overhead_reordering.o -L /home/luo/ZFP/zfp/lib/ -lzfp  -lSZ  -lzstd -lzlib -lm -lgsl -lgslcblas 
-
-overhead_reordering.o : overhead_reordering.c 
-	$(CC) -c $(*F).c -I /home/luo/ZFP/zfp/include 
 
 overhead_level : overhead_level.o
 	$(CC) $(LD) -o $@ overhead_level.o -L /home/luo/ZFP/zfp/lib/ -lzfp  -lSZ  -lzstd -lzlib -lm -lgsl -lgslcblas 
