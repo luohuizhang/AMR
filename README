@@ -1,4 +1,4 @@
-Instruction for LevelRE:
+Instruction for zMesh:
 
 1.Get the applications at http://davis.lbl.gov/Manuals/BISICLES-DOCS/index.html.
 2.Copy the files in filetoo/ to the directory of BISICLES/code/filetool/, and compile.
