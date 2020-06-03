@@ -6,7 +6,7 @@ import array
 import os
 import re 
 
-name_hat = "/home/luo/Dropbox/SC2019_Huizhang/HPDC/SC20/figures/"
+name_hat = ""
 
 data = np.loadtxt("componentTime.txt")
 #data=data.reshape(-1,5)

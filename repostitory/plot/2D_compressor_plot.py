@@ -6,7 +6,7 @@ import array
 import os
 import re 
 
-name_hat = "/home/luo/Dropbox/SC2019_Huizhang/HPDC/SC20/figures/"
+name_hat = ""
 
 namelist=[ "4","8","16","32","64","128","256","512","1K","2K","4K","8K","32K","64K","128K","256K","512K","1M","2M","4M","8M","32M","64M","128M","256M","512M","1G","2G","4G","8G","32G","64G","128G","256G","512G"]
 data = np.loadtxt("../PineIslandGlacier/2Dcompressor.txt")

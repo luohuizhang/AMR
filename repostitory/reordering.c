@@ -4,7 +4,7 @@
 #include <time.h>
 #define Refine_ratio 2
 
-#define Level 6
+#define Level 8
 
 #include <gsl/gsl_sort_int.h>
 
